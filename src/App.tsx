@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from './context/AuthContext.tsx';
 import { LibraryProvider } from './context/LibraryContext.tsx';
+import { ThemeProvider } from './context/ThemeContext.tsx';
 import { AppLayout } from './components/AppLayout.tsx';
 
 const HomePage = lazy(() =>
@@ -54,43 +55,45 @@ const queryClient = new QueryClient({
 });
 
 const RouteFallback = () => (
-  <div className="space-y-4">
-    <div className="h-8 w-48 rounded-lg bg-[#15151B] animate-pulse" />
-    <div className="h-48 rounded-2xl bg-[#15151B] animate-pulse" />
+  <div className="space-y-4 p-6">
+    <div className="h-8 w-48 rounded-lg bg-[var(--bg-elevated)] animate-pulse" />
+    <div className="h-48 rounded-2xl bg-[var(--bg-elevated)] animate-pulse" />
   </div>
 );
 
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <LibraryProvider>
-          <BrowserRouter>
-            <AppLayout>
-              <Suspense fallback={<RouteFallback />}>
-                <Routes>
-                  <Route path="/" element={<HomePage mode="home" />} />
-                  <Route
-                    path="/discover"
-                    element={<HomePage mode="discover" />}
-                  />
-                  <Route path="/search" element={<SearchPage />} />
-                  <Route path="/youtube" element={<YouTubePage />} />
-                  <Route path="/track/:id" element={<TrackDetailPage />} />
-                  <Route path="/artist/:id" element={<ArtistDetailPage />} />
-                  <Route path="/album/:id" element={<AlbumDetailPage />} />
-                  <Route path="/library" element={<LibraryPage />} />
-                  <Route path="/playlists" element={<PlaylistsPage />} />
-                  <Route path="/playlists/:id" element={<PlaylistDetailPage />} />
-                  <Route path="/downloads" element={<DownloadsPage />} />
-                  <Route path="/settings" element={<SettingsPage />} />
-                  <Route path="/admin" element={<AdminPage />} />
-                </Routes>
-              </Suspense>
-            </AppLayout>
-          </BrowserRouter>
-        </LibraryProvider>
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <LibraryProvider>
+            <BrowserRouter>
+              <AppLayout>
+                <Suspense fallback={<RouteFallback />}>
+                  <Routes>
+                    <Route path="/" element={<HomePage mode="home" />} />
+                    <Route
+                      path="/discover"
+                      element={<HomePage mode="discover" />}
+                    />
+                    <Route path="/search" element={<SearchPage />} />
+                    <Route path="/youtube" element={<YouTubePage />} />
+                    <Route path="/track/:id" element={<TrackDetailPage />} />
+                    <Route path="/artist/:id" element={<ArtistDetailPage />} />
+                    <Route path="/album/:id" element={<AlbumDetailPage />} />
+                    <Route path="/library" element={<LibraryPage />} />
+                    <Route path="/playlists" element={<PlaylistsPage />} />
+                    <Route path="/playlists/:id" element={<PlaylistDetailPage />} />
+                    <Route path="/downloads" element={<DownloadsPage />} />
+                    <Route path="/settings" element={<SettingsPage />} />
+                    <Route path="/admin" element={<AdminPage />} />
+                  </Routes>
+                </Suspense>
+              </AppLayout>
+            </BrowserRouter>
+          </LibraryProvider>
+        </AuthProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }

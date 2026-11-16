@@ -34,8 +34,8 @@ export const PlaylistDetailPage: React.FC = () => {
 
   if (!playlist) {
     return (
-      <div className="rounded-xl border border-[#22222E] bg-[#15151B] p-8 text-center">
-        <p className="text-sm text-[#9494A3]">Playlist not found.</p>
+      <div className="rounded-2xl border border-[var(--border-hairline)] liquid-glass-card p-10 text-center">
+        <p className="text-sm text-[var(--text-secondary)]">Playlist not found.</p>
       </div>
     );
   }
@@ -65,45 +65,45 @@ export const PlaylistDetailPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <section className="flex flex-col sm:flex-row gap-6 rounded-2xl border border-[#22222E] bg-[#15151B] p-6 sm:p-8">
+    <div className="space-y-6 animate-fade-in">
+      <section className="flex flex-col sm:flex-row gap-6 rounded-3xl border border-[var(--border-hairline)] liquid-glass p-6 sm:p-8 shadow-xl">
         <ArtworkImage
           src={playlist.artworkUrl || playlist.tracks[0]?.artworkUrl}
           alt={playlist.name}
-          className="w-40 h-40 rounded-xl mx-auto sm:mx-0"
+          className="w-40 h-40 rounded-2xl mx-auto sm:mx-0 shadow-lg"
         />
 
         <div className="flex-1 space-y-3">
-          <p className="text-xs font-medium text-violet-400">Playlist</p>
+          <p className="text-xs font-semibold text-[#fa233b]">Playlist</p>
 
           {editing ? (
-            <form onSubmit={handleSaveRename} className="flex gap-2 max-w-md">
+            <form onSubmit={handleSaveRename} className="flex gap-2.5 max-w-md">
               <input
                 type="text"
                 value={nameInput}
                 onChange={(e) => setNameInput(e.target.value)}
                 aria-label="Edit playlist name"
-                className="flex-1 rounded-lg border border-violet-500 bg-[#0E0E12] px-3 py-1.5 text-lg font-bold text-[#F5F5F7] focus:outline-none"
+                className="flex-1 rounded-xl border border-[#fa233b] bg-[var(--bg-elevated)] px-3.5 py-2 text-lg font-bold text-[var(--text-primary)] focus:outline-none"
               />
               <button
                 type="submit"
                 aria-label="Save playlist name"
-                className="inline-flex items-center gap-1 rounded-lg bg-violet-600 px-3 py-1.5 text-xs font-medium text-white"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-[#fa233b] px-4 py-2 text-xs font-medium text-white shadow-md shadow-[#fa233b]/20"
               >
                 <Check className="w-4 h-4" />
                 Save
               </button>
             </form>
           ) : (
-            <h1 className="font-display text-3xl font-bold text-[#F5F5F7]">
+            <h1 className="font-display text-3xl font-bold text-[var(--text-primary)]">
               {playlist.name}
             </h1>
           )}
 
           {playlist.description && (
-            <p className="text-sm text-[#9494A3]">{playlist.description}</p>
+            <p className="text-sm text-[var(--text-secondary)]">{playlist.description}</p>
           )}
-          <p className="text-xs font-mono-tabular text-[#78788A]">
+          <p className="text-xs font-mono-tabular text-[var(--text-secondary)]">
             {playlist.tracks.length} tracks · {formatDuration(totalSec)} total
           </p>
 
@@ -112,7 +112,7 @@ export const PlaylistDetailPage: React.FC = () => {
               type="button"
               disabled={playlist.tracks.length === 0}
               onClick={() => void handlePlayAll(false)}
-              className="inline-flex items-center gap-2 rounded-lg bg-violet-600 px-4 py-2 text-xs font-medium text-white hover:bg-violet-500 disabled:opacity-40"
+              className="inline-flex items-center gap-2 rounded-xl bg-[#fa233b] px-4 py-2.5 text-xs font-medium text-white hover:bg-[#e01e33] disabled:opacity-40 transition-transform hover:scale-105 shadow-md shadow-[#fa233b]/25"
             >
               <Play className="w-3.5 h-3.5 fill-white" />
               <span>Play All</span>
@@ -121,7 +121,7 @@ export const PlaylistDetailPage: React.FC = () => {
               type="button"
               disabled={playlist.tracks.length === 0}
               onClick={() => void handlePlayAll(true)}
-              className="inline-flex items-center gap-2 rounded-lg border border-[#2A2A38] bg-[#1A1A22] px-4 py-2 text-xs font-medium text-[#F5F5F7] disabled:opacity-40"
+              className="inline-flex items-center gap-2 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-elevated)] px-4 py-2.5 text-xs font-medium text-[var(--text-primary)] disabled:opacity-40 transition-colors"
             >
               <Shuffle className="w-3.5 h-3.5" />
               <span>Shuffle</span>
@@ -132,7 +132,7 @@ export const PlaylistDetailPage: React.FC = () => {
                 setNameInput(playlist.name);
                 setEditing(!editing);
               }}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-[#2A2A38] px-3 py-2 text-xs text-[#9494A3] hover:text-white"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-[var(--border-hairline)] px-3.5 py-2.5 text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
             >
               <Edit2 className="w-3.5 h-3.5" />
               <span>Rename</span>
@@ -140,7 +140,7 @@ export const PlaylistDetailPage: React.FC = () => {
             <button
               type="button"
               onClick={() => void handleDelete()}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-rose-500/30 px-3 py-2 text-xs text-rose-300 hover:bg-rose-500/10"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-rose-500/30 px-3.5 py-2.5 text-xs text-rose-500 hover:bg-rose-500/10 transition-colors"
             >
               <Trash2 className="w-3.5 h-3.5" />
               <span>Delete</span>
@@ -149,9 +149,9 @@ export const PlaylistDetailPage: React.FC = () => {
         </div>
       </section>
 
-      <section className="rounded-xl border border-[#22222E] bg-[#15151B] p-2">
+      <section className="rounded-2xl border border-[var(--border-hairline)] liquid-glass-card p-2">
         {playlist.tracks.length === 0 ? (
-          <div className="p-8 text-center text-sm text-[#9494A3]">
+          <div className="p-10 text-center text-sm text-[var(--text-secondary)]">
             This playlist is empty. Click the playlist icon on any track to add it here.
           </div>
         ) : (
@@ -162,7 +162,7 @@ export const PlaylistDetailPage: React.FC = () => {
               index={idx}
               queueContext={playlist.tracks}
               extraAction={
-                <div className="flex items-center gap-0.5 ml-1">
+                <div className="flex items-center gap-1 ml-1">
                   <button
                     type="button"
                     disabled={idx === 0}
@@ -170,7 +170,7 @@ export const PlaylistDetailPage: React.FC = () => {
                       void reorderPlaylistTracks(playlist.id, idx, idx - 1)
                     }
                     aria-label={`Move ${track.title} up`}
-                    className="p-1.5 text-[#9494A3] hover:text-white disabled:opacity-25"
+                    className="p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] disabled:opacity-20 rounded-lg"
                   >
                     <ArrowUp className="w-3.5 h-3.5" />
                   </button>
@@ -181,7 +181,7 @@ export const PlaylistDetailPage: React.FC = () => {
                       void reorderPlaylistTracks(playlist.id, idx, idx + 1)
                     }
                     aria-label={`Move ${track.title} down`}
-                    className="p-1.5 text-[#9494A3] hover:text-white disabled:opacity-25"
+                    className="p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] disabled:opacity-20 rounded-lg"
                   >
                     <ArrowDown className="w-3.5 h-3.5" />
                   </button>
@@ -191,7 +191,7 @@ export const PlaylistDetailPage: React.FC = () => {
                       void removeTrackFromPlaylist(playlist.id, track.id)
                     }
                     aria-label={`Remove ${track.title} from playlist`}
-                    className="p-1.5 text-[#9494A3] hover:text-rose-400"
+                    className="p-2 text-[var(--text-secondary)] hover:text-rose-500 rounded-lg"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>

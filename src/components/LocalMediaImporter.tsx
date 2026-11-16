@@ -64,10 +64,10 @@ export const LocalMediaImporter: React.FC<LocalMediaImporterProps> = ({
           setIsDragging(false);
           void handleFiles(e.dataTransfer.files);
         }}
-        className={`rounded-xl border border-dashed p-5 transition-colors ${
+        className={`rounded-2xl border border-dashed p-6 transition-all liquid-glass-card ${
           isDragging
-            ? 'border-violet-500 bg-violet-500/10'
-            : 'border-[#2E2E3E] bg-[#13131A] hover:border-[#3E3E52]'
+            ? 'border-[#fa233b] bg-[#fa233b]/10'
+            : 'border-[var(--border-hairline)] hover:border-[#fa233b]/40'
         }`}
       >
         <input
@@ -82,8 +82,8 @@ export const LocalMediaImporter: React.FC<LocalMediaImporterProps> = ({
         />
 
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="flex items-start gap-3.5">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-violet-600/15 border border-violet-500/30 text-violet-300">
+          <div className="flex items-start gap-4">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#fa233b]/15 border border-[#fa233b]/30 text-[#fa233b]">
               {isImporting ? (
                 <Loader2 className="w-5 h-5 animate-spin" />
               ) : (
@@ -91,20 +91,20 @@ export const LocalMediaImporter: React.FC<LocalMediaImporterProps> = ({
               )}
             </div>
             <div className="min-w-0">
-              <p className="text-sm font-semibold text-[#F5F5F7]">
+              <p className="text-sm font-semibold text-[var(--text-primary)]">
                 Import Audio or Video Files from Device
               </p>
-              <p className="mt-1 text-xs text-[#9494A3]">
+              <p className="mt-1 text-xs text-[var(--text-secondary)]">
                 Drag and drop or select MP3, M4A, WAV, FLAC, OGG, MP4, WebM, or
                 MOV files. Saved privately in your browser for offline playback.
               </p>
-              <div className="mt-2 flex flex-wrap items-center gap-3 text-[11px] text-[#7E7E90]">
-                <span className="inline-flex items-center gap-1">
-                  <FileAudio className="w-3.5 h-3.5 text-violet-400" />
+              <div className="mt-2.5 flex flex-wrap items-center gap-3.5 text-[11px] text-[var(--text-secondary)]">
+                <span className="inline-flex items-center gap-1.5">
+                  <FileAudio className="w-3.5 h-3.5 text-[#fa233b]" />
                   Audio plays in Global Player & playlists
                 </span>
-                <span className="inline-flex items-center gap-1">
-                  <FileVideo className="w-3.5 h-3.5 text-violet-400" />
+                <span className="inline-flex items-center gap-1.5">
+                  <FileVideo className="w-3.5 h-3.5 text-[#fa233b]" />
                   Video plays in the Offline Video Stage
                 </span>
               </div>
@@ -115,7 +115,7 @@ export const LocalMediaImporter: React.FC<LocalMediaImporterProps> = ({
             type="button"
             disabled={isImporting}
             onClick={() => inputRef.current?.click()}
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-violet-600 px-4 py-2.5 text-xs font-medium text-white hover:bg-violet-500 disabled:opacity-60 transition-colors whitespace-nowrap shrink-0 min-h-[40px]"
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#fa233b] px-5 py-3 text-xs font-medium text-white hover:bg-[#e01e33] disabled:opacity-60 transition-transform hover:scale-105 shadow-md shadow-[#fa233b]/25 whitespace-nowrap shrink-0 min-h-[44px]"
           >
             <FolderUp className="w-4 h-4" />
             <span>{isImporting ? 'Importing...' : 'Choose Files'}</span>
@@ -126,9 +126,9 @@ export const LocalMediaImporter: React.FC<LocalMediaImporterProps> = ({
       {statusMessage && (
         <div
           role="status"
-          className="flex items-center gap-2 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3.5 py-2.5 text-xs text-emerald-200"
+          className="flex items-center gap-2.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-xs text-emerald-600 dark:text-emerald-300"
         >
-          <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+          <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
           <span>{statusMessage}</span>
         </div>
       )}
@@ -136,11 +136,11 @@ export const LocalMediaImporter: React.FC<LocalMediaImporterProps> = ({
       {errorMessages.length > 0 && (
         <div
           role="alert"
-          className="rounded-lg border border-rose-500/30 bg-rose-500/10 px-3.5 py-2.5 text-xs text-rose-200 space-y-1"
+          className="rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-xs text-rose-500 space-y-1.5"
         >
           {errorMessages.map((msg, idx) => (
             <div key={idx} className="flex items-start gap-2">
-              <AlertCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
+              <AlertCircle className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" />
               <span>{msg}</span>
             </div>
           ))}

@@ -37,28 +37,28 @@ export const PlaylistsPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 animate-fade-in">
       <div>
-        <h1 className="font-display text-2xl font-bold text-[#F5F5F7]">
+        <h1 className="font-display text-2xl sm:text-3xl font-bold text-[var(--text-primary)]">
           Playlists
         </h1>
-        <p className="mt-1 text-sm text-[#9494A3]">
+        <p className="mt-1.5 text-sm text-[var(--text-secondary)]">
           Organize tracks into personal collections synced offline and in PostgreSQL.
         </p>
       </div>
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="rounded-xl border border-[#22222E] bg-[#15151B] p-5 space-y-4 max-w-2xl"
+        className="rounded-2xl border border-[var(--border-hairline)] liquid-glass-card p-6 space-y-4 max-w-2xl"
       >
-        <h2 className="text-sm font-semibold text-[#F5F5F7]">
+        <h2 className="text-sm font-semibold text-[var(--text-primary)]">
           Create New Playlist
         </h2>
-        <div className="grid sm:grid-cols-2 gap-3">
+        <div className="grid sm:grid-cols-2 gap-4">
           <div>
             <label
               htmlFor="playlist-name"
-              className="block text-xs text-[#9494A3] mb-1.5"
+              className="block text-xs text-[var(--text-secondary)] mb-1.5"
             >
               Playlist Name
             </label>
@@ -67,10 +67,10 @@ export const PlaylistsPage: React.FC = () => {
               type="text"
               placeholder="e.g. Late Night Focus"
               {...register('name')}
-              className="w-full rounded-lg border border-[#2A2A38] bg-[#0E0E12] px-3.5 py-2 text-sm text-[#F5F5F7] placeholder:text-[#666678] focus:border-violet-500 focus:outline-none"
+              className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-elevated)] px-3.5 py-2.5 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] focus:border-[#fa233b] focus:outline-none"
             />
             {errors.name && (
-              <p className="mt-1 text-xs text-rose-400">
+              <p className="mt-1 text-xs text-rose-500">
                 {errors.name.message}
               </p>
             )}
@@ -78,7 +78,7 @@ export const PlaylistsPage: React.FC = () => {
           <div>
             <label
               htmlFor="playlist-desc"
-              className="block text-xs text-[#9494A3] mb-1.5"
+              className="block text-xs text-[var(--text-secondary)] mb-1.5"
             >
               Description (optional)
             </label>
@@ -87,14 +87,14 @@ export const PlaylistsPage: React.FC = () => {
               type="text"
               placeholder="Ambient & instrumental cuts"
               {...register('description')}
-              className="w-full rounded-lg border border-[#2A2A38] bg-[#0E0E12] px-3.5 py-2 text-sm text-[#F5F5F7] placeholder:text-[#666678] focus:border-violet-500 focus:outline-none"
+              className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-elevated)] px-3.5 py-2.5 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] focus:border-[#fa233b] focus:outline-none"
             />
           </div>
         </div>
         <button
           type="submit"
           disabled={isSubmitting}
-          className="inline-flex items-center gap-2 rounded-lg bg-violet-600 px-4 py-2 text-xs font-medium text-white hover:bg-violet-500 transition-colors"
+          className="inline-flex items-center gap-2 rounded-xl bg-[#fa233b] px-5 py-2.5 text-xs font-medium text-white hover:bg-[#e01e33] transition-transform hover:scale-105 shadow-md shadow-[#fa233b]/20"
         >
           <Plus className="w-4 h-4" />
           <span>Create Playlist</span>
@@ -102,40 +102,40 @@ export const PlaylistsPage: React.FC = () => {
       </form>
 
       {playlists.length === 0 ? (
-        <div className="rounded-xl border border-[#22222E] bg-[#15151B] p-10 text-center space-y-2">
-          <ListMusic className="w-7 h-7 text-[#666678] mx-auto" />
-          <p className="text-sm font-medium text-[#F5F5F7]">
+        <div className="rounded-2xl border border-[var(--border-hairline)] liquid-glass-card p-10 text-center space-y-3">
+          <ListMusic className="w-8 h-8 text-[var(--text-secondary)] mx-auto" />
+          <p className="text-sm font-medium text-[var(--text-primary)]">
             No playlists created yet
           </p>
-          <p className="text-xs text-[#9494A3]">
+          <p className="text-xs text-[var(--text-secondary)]">
             Create a playlist above, then add songs from Discover or Search.
           </p>
         </div>
       ) : (
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {playlists.map((pl) => {
             const totalSec = computeTotalDuration(pl.tracks);
             return (
               <Link
                 key={pl.id}
                 to={`/playlists/${pl.id}`}
-                className="flex items-center gap-4 rounded-xl border border-[#22222E] bg-[#15151B] p-4 hover:border-[#343446] transition-colors"
+                className="flex items-center gap-4 rounded-2xl border border-[var(--border-hairline)] liquid-glass-card p-4 hover:border-[#fa233b]/40 transition-all hover-glass-lift"
               >
                 <ArtworkImage
                   src={pl.artworkUrl || pl.tracks[0]?.artworkUrl}
                   alt={pl.name}
-                  className="w-20 h-20 rounded-lg"
+                  className="w-20 h-20 rounded-xl shadow-md"
                 />
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-base font-semibold text-[#F5F5F7]">
+                  <p className="truncate text-base font-semibold text-[var(--text-primary)]">
                     {pl.name}
                   </p>
                   {pl.description && (
-                    <p className="mt-0.5 truncate text-xs text-[#9494A3]">
+                    <p className="mt-0.5 truncate text-xs text-[var(--text-secondary)]">
                       {pl.description}
                     </p>
                   )}
-                  <p className="mt-2 text-xs font-mono-tabular text-[#78788A]">
+                  <p className="mt-2 text-xs font-mono-tabular text-[var(--text-secondary)]">
                     {pl.tracks.length} tracks · {formatDuration(totalSec)}
                   </p>
                 </div>

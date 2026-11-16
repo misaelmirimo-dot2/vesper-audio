@@ -70,14 +70,14 @@ export const GlobalPlayer: React.FC = () => {
       {playbackError && (
         <div
           role="alert"
-          className="fixed bottom-24 md:bottom-20 right-4 z-50 flex items-center gap-3 rounded-lg border border-rose-500/40 bg-[#1B1216] px-4 py-2.5 text-xs text-rose-200 shadow-xl"
+          className="fixed bottom-24 md:bottom-20 right-4 z-50 flex items-center gap-3 rounded-xl border border-rose-500/40 bg-[var(--bg-surface)] px-4 py-2.5 text-xs text-rose-500 shadow-2xl"
         >
           <span>{playbackError}</span>
           <button
             type="button"
             onClick={clearError}
             aria-label="Dismiss playback error"
-            className="text-rose-300 hover:text-white"
+            className="text-rose-500 hover:opacity-80"
           >
             <X className="w-3.5 h-3.5" />
           </button>
@@ -88,27 +88,29 @@ export const GlobalPlayer: React.FC = () => {
       {isQueueOpen && (
         <aside
           aria-label="Playback Queue"
-          className="fixed bottom-[76px] right-4 z-40 w-80 max-w-[calc(100vw-2rem)] max-h-[420px] flex flex-col rounded-xl border border-[#262632] bg-[#15151B] shadow-2xl overflow-hidden"
+          className="fixed bottom-[76px] right-4 z-40 w-80 max-w-[calc(100vw-2rem)] max-h-[420px] flex flex-col rounded-2xl border border-[var(--border-hairline)] liquid-glass shadow-2xl overflow-hidden"
         >
-          <div className="flex items-center justify-between border-b border-[#262632] px-4 py-3">
-            <h3 className="text-sm font-semibold text-[#F5F5F7]">
+          <div className="flex items-center justify-between border-b border-[var(--border-hairline)] px-4 py-3">
+            <h3 className="text-sm font-semibold text-[var(--text-primary)]">
               Up Next ({queue.length})
             </h3>
             <button
               type="button"
               onClick={() => setQueueOpen(false)}
               aria-label="Close playback queue"
-              className="p-1.5 text-[#9494A3] hover:text-white rounded-lg"
+              className="p-1.5 text-[var(--text-secondary)] hover:text-[var(--text-primary)] rounded-lg"
             >
               <X className="w-4 h-4" />
             </button>
           </div>
-          <div className="flex-1 overflow-y-auto divide-y divide-[#1E1E28] p-2">
+          <div className="flex-1 overflow-y-auto divide-y divide-[var(--border-hairline)] p-2">
             {queue.map((item, idx) => (
               <div
                 key={`${item.id}-${idx}`}
-                className={`flex items-center gap-2.5 rounded-lg px-2 py-2 ${
-                  idx === currentIndex ? 'bg-violet-500/10' : 'hover:bg-[#1C1C24]'
+                className={`flex items-center gap-2.5 rounded-xl px-2.5 py-2 transition-colors ${
+                  idx === currentIndex
+                    ? 'bg-[#fa233b]/10 text-[#fa233b]'
+                    : 'hover:bg-black/5 dark:hover:bg-white/5'
                 }`}
               >
                 <button
@@ -119,19 +121,19 @@ export const GlobalPlayer: React.FC = () => {
                   <ArtworkImage
                     src={item.artworkUrl}
                     alt={item.title}
-                    className="w-9 h-9 rounded-md"
+                    className="w-9 h-9 rounded-lg"
                   />
                   <div className="min-w-0 flex-1">
                     <p
                       className={`truncate text-xs font-medium ${
                         idx === currentIndex
-                          ? 'text-violet-400'
-                          : 'text-[#F5F5F7]'
+                          ? 'text-[#fa233b] font-semibold'
+                          : 'text-[var(--text-primary)]'
                       }`}
                     >
                       {item.title}
                     </p>
-                    <p className="truncate text-[11px] text-[#9494A3]">
+                    <p className="truncate text-[11px] text-[var(--text-secondary)]">
                       {item.artistName}
                     </p>
                   </div>
@@ -140,7 +142,7 @@ export const GlobalPlayer: React.FC = () => {
                   type="button"
                   onClick={() => removeFromQueue(idx)}
                   aria-label={`Remove ${item.title} from queue`}
-                  className="p-1.5 text-[#666678] hover:text-rose-400"
+                  className="p-1.5 text-[var(--text-secondary)] hover:text-rose-500 rounded-lg"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
@@ -156,20 +158,20 @@ export const GlobalPlayer: React.FC = () => {
           role="dialog"
           aria-modal="true"
           aria-label="Full screen music player"
-          className="fixed inset-0 z-50 flex flex-col bg-[#0E0E12] overflow-y-auto"
+          className="fixed inset-0 z-50 flex flex-col bg-[var(--bg-canvas)] overflow-y-auto animate-fade-in"
         >
-          <header className="flex items-center justify-between px-5 py-4 border-b border-[#1E1E28]">
+          <header className="flex items-center justify-between px-6 py-4 border-b border-[var(--border-hairline)] liquid-glass">
             <button
               type="button"
               onClick={() => setFullScreen(false)}
               aria-label="Minimize full screen player"
-              className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-[#9494A3] hover:text-white hover:bg-[#1C1C24]"
+              className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
             >
               <ChevronDown className="w-5 h-5" />
             </button>
             <div className="text-center">
-              <p className="text-xs font-medium text-[#9494A3]">Now Playing</p>
-              <p className="text-xs text-[#F5F5F7] truncate max-w-[200px]">
+              <p className="text-xs font-medium text-[var(--text-secondary)]">Now Playing</p>
+              <p className="text-xs font-semibold text-[var(--text-primary)] truncate max-w-[220px]">
                 {currentTrack.albumName}
               </p>
             </div>
@@ -180,35 +182,35 @@ export const GlobalPlayer: React.FC = () => {
                 setQueueOpen(true);
               }}
               aria-label="Open queue"
-              className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-[#9494A3] hover:text-white hover:bg-[#1C1C24]"
+              className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
             >
               <ListMusic className="w-5 h-5" />
             </button>
           </header>
 
-          <div className="mx-auto flex w-full max-w-4xl flex-1 flex-col lg:flex-row items-center justify-center gap-10 px-6 py-8">
+          <div className="mx-auto flex w-full max-w-4xl flex-1 flex-col lg:flex-row items-center justify-center gap-12 px-6 py-10">
             <div className="w-full max-w-sm">
               <ArtworkImage
                 src={currentTrack.artworkUrl}
                 alt={`${currentTrack.title} album cover`}
-                className="w-full aspect-square rounded-2xl border border-[#262632] shadow-2xl"
+                className="w-full aspect-square rounded-3xl border border-[var(--border-hairline)] shadow-2xl shadow-black/20"
               />
             </div>
 
-            <div className="w-full max-w-md space-y-6">
+            <div className="w-full max-w-md space-y-7">
               <div className="flex items-start justify-between gap-4">
                 <div className="min-w-0">
-                  <h2 className="text-2xl font-bold text-[#F5F5F7] truncate">
+                  <h2 className="text-2xl sm:text-3xl font-bold text-[var(--text-primary)] truncate">
                     {currentTrack.title}
                   </h2>
-                  <p className="mt-1 text-sm text-[#9494A3]">
+                  <p className="mt-1.5 text-sm text-[var(--text-secondary)]">
                     {currentTrack.provider === 'local' ? (
                       <span>{currentTrack.artistName}</span>
                     ) : (
                       <Link
                         to={`/artist/${currentTrack.artistId}`}
                         onClick={() => setFullScreen(false)}
-                        className="hover:text-white underline-offset-4 hover:underline"
+                        className="hover:text-[var(--text-primary)] underline-offset-4 hover:underline font-medium"
                       >
                         {currentTrack.artistName}
                       </Link>
@@ -225,11 +227,11 @@ export const GlobalPlayer: React.FC = () => {
                   aria-label={
                     favorited ? 'Remove from favorites' : 'Save to favorites'
                   }
-                  className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-[#9494A3] hover:text-violet-400"
+                  className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl text-[var(--text-secondary)] hover:text-[#fa233b] transition-colors"
                 >
                   <Heart
                     className={`w-5 h-5 ${
-                      favorited ? 'fill-violet-400 text-violet-400' : ''
+                      favorited ? 'fill-[#fa233b] text-[#fa233b]' : ''
                     }`}
                   />
                 </button>
@@ -245,9 +247,9 @@ export const GlobalPlayer: React.FC = () => {
                   value={Math.min(currentTime, duration || 1)}
                   onChange={(e) => seek(Number(e.target.value))}
                   aria-label="Seek audio position"
-                  className="w-full accent-violet-500 cursor-pointer h-1.5 bg-[#262632] rounded-lg"
+                  className="w-full accent-[#fa233b] cursor-pointer h-2 bg-[var(--border-hairline)] rounded-full transition-all"
                 />
-                <div className="mt-2 flex items-center justify-between text-xs font-mono-tabular text-[#9494A3]">
+                <div className="mt-2.5 flex items-center justify-between text-xs font-mono-tabular text-[var(--text-secondary)]">
                   <span>{formatDuration(currentTime)}</span>
                   <span>{formatDuration(duration)}</span>
                 </div>
@@ -260,10 +262,10 @@ export const GlobalPlayer: React.FC = () => {
                   onClick={toggleShuffle}
                   aria-label="Toggle shuffle"
                   aria-pressed={shuffle}
-                  className={`min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg transition-colors ${
+                  className={`min-w-[44px] min-h-[44px] flex items-center justify-center rounded-2xl transition-colors ${
                     shuffle
-                      ? 'text-violet-400 bg-violet-500/10'
-                      : 'text-[#9494A3] hover:text-white'
+                      ? 'text-[#fa233b] bg-[#fa233b]/10'
+                      : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
                   }`}
                 >
                   <Shuffle className="w-5 h-5" />
@@ -273,7 +275,7 @@ export const GlobalPlayer: React.FC = () => {
                   type="button"
                   onClick={() => void previousTrack()}
                   aria-label="Previous track"
-                  className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-[#F5F5F7] hover:bg-[#1C1C24]"
+                  className="min-w-[48px] min-h-[48px] flex items-center justify-center rounded-2xl text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
                 >
                   <SkipBack className="w-6 h-6" />
                 </button>
@@ -282,12 +284,12 @@ export const GlobalPlayer: React.FC = () => {
                   type="button"
                   onClick={() => void togglePlay()}
                   aria-label={isPlaying ? 'Pause playback' : 'Start playback'}
-                  className="flex items-center justify-center w-14 h-14 rounded-full bg-violet-600 text-white hover:bg-violet-500 transition-colors shadow-lg"
+                  className="flex items-center justify-center w-16 h-16 rounded-full bg-[#fa233b] text-white hover:bg-[#e01e33] transition-transform hover:scale-105 active:scale-95 shadow-xl shadow-[#fa233b]/30"
                 >
                   {isPlaying ? (
-                    <Pause className="w-6 h-6 fill-white" />
+                    <Pause className="w-7 h-7 fill-white" />
                   ) : (
-                    <Play className="w-6 h-6 fill-white ml-0.5" />
+                    <Play className="w-7 h-7 fill-white ml-0.5" />
                   )}
                 </button>
 
@@ -295,7 +297,7 @@ export const GlobalPlayer: React.FC = () => {
                   type="button"
                   onClick={() => void nextTrack()}
                   aria-label="Next track"
-                  className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-[#F5F5F7] hover:bg-[#1C1C24]"
+                  className="min-w-[48px] min-h-[48px] flex items-center justify-center rounded-2xl text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
                 >
                   <SkipForward className="w-6 h-6" />
                 </button>
@@ -304,10 +306,10 @@ export const GlobalPlayer: React.FC = () => {
                   type="button"
                   onClick={cycleRepeat}
                   aria-label={`Cycle repeat mode (current: ${repeat})`}
-                  className={`min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg transition-colors ${
+                  className={`min-w-[44px] min-h-[44px] flex items-center justify-center rounded-2xl transition-colors ${
                     repeat !== 'off'
-                      ? 'text-violet-400 bg-violet-500/10'
-                      : 'text-[#9494A3] hover:text-white'
+                      ? 'text-[#fa233b] bg-[#fa233b]/10'
+                      : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
                   }`}
                 >
                   {repeat === 'one' ? (
@@ -319,28 +321,28 @@ export const GlobalPlayer: React.FC = () => {
               </div>
 
               {/* Source & License Attribution Block */}
-              <div className="rounded-xl border border-[#262632] bg-[#15151B] p-4 space-y-2 text-xs">
-                <div className="flex items-center justify-between text-[#F5F5F7]">
-                  <span className="flex items-center gap-1.5 font-medium">
-                    <ShieldCheck className="w-4 h-4 text-violet-400" />
+              <div className="rounded-2xl border border-[var(--border-hairline)] liquid-glass-card p-5 space-y-2.5 text-xs">
+                <div className="flex items-center justify-between text-[var(--text-primary)]">
+                  <span className="flex items-center gap-2 font-semibold">
+                    <ShieldCheck className="w-4 h-4 text-[#fa233b]" />
                     {currentTrack.provider === 'local'
                       ? 'Local Device Media'
                       : `${currentTrack.licenseType} · Jamendo Attribution`}
                   </span>
                   {isPlayingFromOfflineCache && (
-                    <span className="flex items-center gap-1 text-emerald-400">
+                    <span className="flex items-center gap-1 text-emerald-500 font-medium">
                       <WifiOff className="w-3.5 h-3.5" />
                       Offline Cache
                     </span>
                   )}
                 </div>
                 {currentTrack.provider === 'local' ? (
-                  <p className="text-[#9494A3]">
-                    Imported by user · Stored in IndexedDB for offline playback
+                  <p className="text-[var(--text-secondary)]">
+                    Imported by user · Stored securely in IndexedDB for offline playback
                   </p>
                 ) : (
                   <>
-                    <p className="text-[#9494A3]">
+                    <p className="text-[var(--text-secondary)]">
                       Artist: {currentTrack.artistName} · Source: Jamendo Music
                     </p>
                     <div className="flex flex-wrap items-center gap-4 pt-1">
@@ -348,7 +350,7 @@ export const GlobalPlayer: React.FC = () => {
                         href={currentTrack.originalTrackUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-1 text-violet-400 hover:text-violet-300 underline underline-offset-4"
+                        className="inline-flex items-center gap-1 text-[#fa233b] hover:underline underline-offset-4 font-medium"
                       >
                         Original Jamendo Page
                         <ExternalLink className="w-3 h-3" />
@@ -357,7 +359,7 @@ export const GlobalPlayer: React.FC = () => {
                         href={currentTrack.licenseUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-1 text-[#9494A3] hover:text-white underline underline-offset-4"
+                        className="inline-flex items-center gap-1 text-[var(--text-secondary)] hover:text-[var(--text-primary)] underline underline-offset-4"
                       >
                         View Licence Deed
                         <ExternalLink className="w-3 h-3" />
@@ -371,39 +373,39 @@ export const GlobalPlayer: React.FC = () => {
         </div>
       )}
 
-      {/* Persistent Bottom Player Bar (Desktop + Mobile Mini-Player) */}
+      {/* Persistent Bottom Player Bar with Liquid Glass */}
       <div
         role="region"
         aria-label="Global music player"
-        className="fixed bottom-12 md:bottom-0 left-0 right-0 z-30 border-t border-[#262632] bg-[#13131A]/95 backdrop-blur-md"
+        className="fixed bottom-13 md:bottom-0 left-0 right-0 z-30 border-t border-[var(--border-hairline)] liquid-glass"
       >
         {/* Top thin progress bar on mobile */}
-        <div className="md:hidden h-0.5 w-full bg-[#262632]">
+        <div className="md:hidden h-1 w-full bg-[var(--border-hairline)]">
           <div
-            className="h-full bg-violet-500 transition-all"
+            className="h-full bg-[#fa233b] transition-all"
             style={{ width: `${progressPct}%` }}
           />
         </div>
 
-        <div className="mx-auto flex h-13 md:h-[76px] items-center justify-between gap-3 px-3 md:px-6">
+        <div className="mx-auto flex h-14 md:h-[80px] items-center justify-between gap-4 px-4 md:px-8">
           {/* Left: Track info */}
-          <div className="flex items-center gap-3 min-w-0 md:w-1/3">
+          <div className="flex items-center gap-3.5 min-w-0 md:w-1/3">
             <button
               type="button"
               onClick={() => setFullScreen(true)}
               aria-label="Expand full screen player"
-              className="flex items-center gap-3 min-w-0 text-left rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500"
+              className="flex items-center gap-3.5 min-w-0 text-left rounded-xl group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#fa233b]"
             >
               <ArtworkImage
                 src={currentTrack.artworkUrl}
                 alt={currentTrack.title}
-                className="w-10 h-10 md:w-12 md:h-12 rounded-lg"
+                className="w-11 h-11 md:w-13 md:h-13 rounded-xl shadow-md transition-transform group-hover:scale-105"
               />
               <div className="min-w-0">
-                <p className="truncate text-sm font-medium text-[#F5F5F7]">
+                <p className="truncate text-sm font-semibold text-[var(--text-primary)]">
                   {currentTrack.title}
                 </p>
-                <p className="truncate text-xs text-[#9494A3]">
+                <p className="truncate text-xs text-[var(--text-secondary)]">
                   {currentTrack.artistName}
                   <span className="hidden sm:inline">
                     {' '}
@@ -418,11 +420,11 @@ export const GlobalPlayer: React.FC = () => {
               aria-label={
                 favorited ? 'Unfavorite current track' : 'Favorite current track'
               }
-              className="hidden sm:flex min-w-[36px] min-h-[36px] items-center justify-center rounded-lg text-[#9494A3] hover:text-violet-400"
+              className="hidden sm:flex min-w-[36px] min-h-[36px] items-center justify-center rounded-xl text-[var(--text-secondary)] hover:text-[#fa233b] transition-colors"
             >
               <Heart
                 className={`w-4 h-4 ${
-                  favorited ? 'fill-violet-400 text-violet-400' : ''
+                  favorited ? 'fill-[#fa233b] text-[#fa233b]' : ''
                 }`}
               />
             </button>
@@ -430,16 +432,16 @@ export const GlobalPlayer: React.FC = () => {
 
           {/* Center: Controls & Seek (Desktop) */}
           <div className="hidden md:flex flex-col items-center justify-center gap-1.5 w-1/3 max-w-lg">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4">
               <button
                 type="button"
                 onClick={toggleShuffle}
                 aria-label="Shuffle"
                 aria-pressed={shuffle}
-                className={`p-1.5 rounded-md transition-colors ${
+                className={`p-1.5 rounded-lg transition-colors ${
                   shuffle
-                    ? 'text-violet-400'
-                    : 'text-[#9494A3] hover:text-white'
+                    ? 'text-[#fa233b]'
+                    : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
                 }`}
               >
                 <Shuffle className="w-4 h-4" />
@@ -448,7 +450,7 @@ export const GlobalPlayer: React.FC = () => {
                 type="button"
                 onClick={() => void previousTrack()}
                 aria-label="Previous track"
-                className="p-1.5 rounded-md text-[#D4D4DF] hover:text-white"
+                className="p-1.5 rounded-lg text-[var(--text-primary)] hover:opacity-70 transition-opacity"
               >
                 <SkipBack className="w-4 h-4" />
               </button>
@@ -456,7 +458,7 @@ export const GlobalPlayer: React.FC = () => {
                 type="button"
                 onClick={() => void togglePlay()}
                 aria-label={isPlaying ? 'Pause' : 'Play'}
-                className="flex items-center justify-center w-9 h-9 rounded-full bg-violet-600 text-white hover:bg-violet-500 transition-colors"
+                className="flex items-center justify-center w-10 h-10 rounded-full bg-[#fa233b] text-white hover:bg-[#e01e33] transition-transform hover:scale-105 active:scale-95 shadow-md shadow-[#fa233b]/25"
               >
                 {isPlaying ? (
                   <Pause className="w-4 h-4 fill-white" />
@@ -468,7 +470,7 @@ export const GlobalPlayer: React.FC = () => {
                 type="button"
                 onClick={() => void nextTrack()}
                 aria-label="Next track"
-                className="p-1.5 rounded-md text-[#D4D4DF] hover:text-white"
+                className="p-1.5 rounded-lg text-[var(--text-primary)] hover:opacity-70 transition-opacity"
               >
                 <SkipForward className="w-4 h-4" />
               </button>
@@ -476,10 +478,10 @@ export const GlobalPlayer: React.FC = () => {
                 type="button"
                 onClick={cycleRepeat}
                 aria-label={`Repeat (${repeat})`}
-                className={`p-1.5 rounded-md transition-colors ${
+                className={`p-1.5 rounded-lg transition-colors ${
                   repeat !== 'off'
-                    ? 'text-violet-400'
-                    : 'text-[#9494A3] hover:text-white'
+                    ? 'text-[#fa233b]'
+                    : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
                 }`}
               >
                 {repeat === 'one' ? (
@@ -491,7 +493,7 @@ export const GlobalPlayer: React.FC = () => {
             </div>
 
             <div className="flex w-full items-center gap-2.5">
-              <span className="text-[11px] font-mono-tabular text-[#9494A3] w-9 text-right">
+              <span className="text-[11px] font-mono-tabular text-[var(--text-secondary)] w-9 text-right">
                 {formatDuration(currentTime)}
               </span>
               <input
@@ -502,22 +504,22 @@ export const GlobalPlayer: React.FC = () => {
                 value={Math.min(currentTime, duration || 1)}
                 onChange={(e) => seek(Number(e.target.value))}
                 aria-label="Playback progress"
-                className="flex-1 accent-violet-500 h-1 bg-[#262632] rounded-lg cursor-pointer"
+                className="flex-1 accent-[#fa233b] h-1.5 bg-[var(--border-hairline)] rounded-full cursor-pointer"
               />
-              <span className="text-[11px] font-mono-tabular text-[#9494A3] w-9">
+              <span className="text-[11px] font-mono-tabular text-[var(--text-secondary)] w-9">
                 {formatDuration(duration)}
               </span>
             </div>
           </div>
 
           {/* Right: Volume, Queue, Expand (Desktop) + Quick Play/Expand (Mobile) */}
-          <div className="flex items-center justify-end gap-2 md:w-1/3">
-            <div className="hidden lg:flex items-center gap-2">
+          <div className="flex items-center justify-end gap-2.5 md:w-1/3">
+            <div className="hidden lg:flex items-center gap-2.5">
               <button
                 type="button"
                 onClick={() => setVolume(volume > 0 ? 0 : 0.85)}
                 aria-label={volume === 0 ? 'Unmute volume' : 'Mute volume'}
-                className="p-1.5 text-[#9494A3] hover:text-white"
+                className="p-1.5 text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
               >
                 {volume === 0 ? (
                   <VolumeX className="w-4 h-4" />
@@ -533,7 +535,7 @@ export const GlobalPlayer: React.FC = () => {
                 value={volume}
                 onChange={(e) => setVolume(Number(e.target.value))}
                 aria-label="Audio volume"
-                className="w-20 accent-violet-500 h-1 bg-[#262632] rounded-lg cursor-pointer"
+                className="w-20 accent-[#fa233b] h-1.5 bg-[var(--border-hairline)] rounded-full cursor-pointer"
               />
             </div>
 
@@ -541,10 +543,10 @@ export const GlobalPlayer: React.FC = () => {
               type="button"
               onClick={() => setQueueOpen(!isQueueOpen)}
               aria-label="Toggle playback queue"
-              className={`hidden md:flex min-w-[36px] min-h-[36px] items-center justify-center rounded-lg transition-colors ${
+              className={`hidden md:flex min-w-[36px] min-h-[36px] items-center justify-center rounded-xl transition-colors ${
                 isQueueOpen
-                  ? 'text-violet-400 bg-violet-500/10'
-                  : 'text-[#9494A3] hover:text-white'
+                  ? 'text-[#fa233b] bg-[#fa233b]/10'
+                  : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10'
               }`}
             >
               <ListMusic className="w-4 h-4" />
@@ -554,12 +556,12 @@ export const GlobalPlayer: React.FC = () => {
               type="button"
               onClick={() => void togglePlay()}
               aria-label={isPlaying ? 'Pause audio' : 'Play audio'}
-              className="md:hidden min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-white"
+              className="md:hidden min-w-[40px] min-h-[40px] flex items-center justify-center rounded-full bg-[#fa233b] text-white shadow-md"
             >
               {isPlaying ? (
-                <Pause className="w-5 h-5 fill-white" />
+                <Pause className="w-4 h-4 fill-white" />
               ) : (
-                <Play className="w-5 h-5 fill-white" />
+                <Play className="w-4 h-4 fill-white ml-0.5" />
               )}
             </button>
 
@@ -567,7 +569,7 @@ export const GlobalPlayer: React.FC = () => {
               type="button"
               onClick={() => setFullScreen(true)}
               aria-label="Open full screen player"
-              className="min-w-[36px] min-h-[36px] flex items-center justify-center rounded-lg text-[#9494A3] hover:text-white"
+              className="min-w-[36px] min-h-[36px] flex items-center justify-center rounded-xl text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
             >
               <Maximize2 className="w-4 h-4" />
             </button>

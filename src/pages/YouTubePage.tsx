@@ -160,11 +160,14 @@ export const YouTubePage: React.FC = () => {
     const trimmed = inputValue.trim();
     setSubmittedQuery(trimmed);
     setSectionTab('search');
+    const next = new URLSearchParams(searchParams);
+    next.delete('tab');
     if (trimmed) {
-      setSearchParams({ q: trimmed }, { replace: true });
+      next.set('q', trimmed);
     } else {
-      setSearchParams({}, { replace: true });
+      next.delete('q');
     }
+    setSearchParams(next, { replace: true });
   };
 
   const handleSelectVideo = (
@@ -223,10 +226,10 @@ export const YouTubePage: React.FC = () => {
     return (
       <article
         key={video.videoId}
-        className={`group rounded-xl border bg-[#15151B] p-3.5 flex flex-col justify-between gap-3 transition-colors ${
+        className={`group rounded-2xl border liquid-glass-card p-4 flex flex-col justify-between gap-3.5 transition-all hover-glass-lift ${
           isSelected
-            ? 'border-violet-500/70 bg-[#181822]'
-            : 'border-[#22222E] hover:border-[#343446]'
+            ? 'border-[#fa233b] bg-[#fa233b]/10 shadow-lg'
+            : 'border-[var(--border-hairline)]'
         }`}
       >
         <div>
@@ -234,24 +237,24 @@ export const YouTubePage: React.FC = () => {
             type="button"
             onClick={() => handleSelectVideo(video, 'video', queueList)}
             aria-label={`Play ${video.title}`}
-            className="relative block w-full overflow-hidden rounded-lg text-left focus:outline-none focus:ring-2 focus:ring-violet-500"
+            className="relative block w-full overflow-hidden rounded-xl text-left focus:outline-none focus:ring-2 focus:ring-[#fa233b]"
           >
             <ArtworkImage
               src={video.thumbnailUrl}
               alt={video.title}
-              className="aspect-video w-full rounded-lg"
+              className="aspect-video w-full rounded-xl transition-transform group-hover:scale-105"
             />
-            <span className="absolute inset-0 flex items-center justify-center bg-black/35 opacity-0 group-hover:opacity-100 transition-opacity">
-              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-violet-600 text-white shadow-lg">
+            <span className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity">
+              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[#fa233b] text-white shadow-xl">
                 <Play className="w-5 h-5 fill-current ml-0.5" />
               </span>
             </span>
           </button>
 
-          <h3 className="mt-3 text-sm font-semibold text-[#F5F5F7] line-clamp-2 leading-snug">
+          <h3 className="mt-3 text-sm font-semibold text-[var(--text-primary)] line-clamp-2 leading-snug">
             {video.title}
           </h3>
-          <p className="mt-1.5 text-xs text-[#9494A3] truncate">
+          <p className="mt-1.5 text-xs text-[var(--text-secondary)] truncate">
             {video.channelTitle} · {video.durationLabel} · {video.viewCountLabel}
           </p>
         </div>
@@ -260,7 +263,7 @@ export const YouTubePage: React.FC = () => {
           <button
             type="button"
             onClick={() => handleSelectVideo(video, 'video', queueList)}
-            className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg bg-violet-600/15 border border-violet-500/30 px-2.5 py-2 text-xs font-medium text-violet-200 hover:bg-violet-600 hover:text-white transition-colors whitespace-nowrap min-h-[40px]"
+            className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#fa233b]/15 border border-[#fa233b]/30 px-3 py-2.5 text-xs font-medium text-[#fa233b] dark:text-[#ff6961] hover:bg-[#fa233b] hover:text-white transition-colors whitespace-nowrap min-h-[40px]"
           >
             <MonitorPlay className="w-3.5 h-3.5" />
             <span>Watch</span>
@@ -268,7 +271,7 @@ export const YouTubePage: React.FC = () => {
           <button
             type="button"
             onClick={() => handleSelectVideo(video, 'music', queueList)}
-            className="inline-flex items-center justify-center gap-1 rounded-lg border border-[#2A2A38] bg-[#181820] px-2.5 py-2 text-xs font-medium text-[#D4D4DF] hover:border-violet-500/50 hover:text-white transition-colors whitespace-nowrap min-h-[40px]"
+            className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-elevated)] px-3 py-2.5 text-xs font-medium text-[var(--text-primary)] hover:border-[#fa233b]/50 transition-colors whitespace-nowrap min-h-[40px]"
             aria-label={`Listen to ${video.title} in music focus mode`}
           >
             <Headphones className="w-3.5 h-3.5" />
@@ -282,10 +285,10 @@ export const YouTubePage: React.FC = () => {
                 ? `Remove ${video.title} from YouTube favorites`
                 : `Save ${video.title} to YouTube favorites`
             }
-            className={`min-w-[40px] min-h-[40px] inline-flex items-center justify-center rounded-lg border transition-colors ${
+            className={`min-w-[40px] min-h-[40px] inline-flex items-center justify-center rounded-xl border transition-colors ${
               faved
-                ? 'border-violet-500/50 bg-violet-600/20 text-violet-300'
-                : 'border-[#2A2A38] bg-[#181820] text-[#9494A3] hover:text-white'
+                ? 'border-[#fa233b]/50 bg-[#fa233b]/20 text-[#fa233b]'
+                : 'border-[var(--border-hairline)] bg-[var(--bg-elevated)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
             }`}
           >
             <Heart className={`w-4 h-4 ${faved ? 'fill-current' : ''}`} />
@@ -294,7 +297,7 @@ export const YouTubePage: React.FC = () => {
             type="button"
             onClick={() => setPlaylistModalVideo(video)}
             aria-label={`Add ${video.title} to YouTube playlist`}
-            className="min-w-[40px] min-h-[40px] inline-flex items-center justify-center rounded-lg border border-[#2A2A38] bg-[#181820] text-[#9494A3] hover:text-white transition-colors"
+            className="min-w-[40px] min-h-[40px] inline-flex items-center justify-center rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-elevated)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
           >
             <ListPlus className="w-4 h-4" />
           </button>
@@ -305,21 +308,21 @@ export const YouTubePage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
         <div>
-          <h1 className="font-display text-2xl font-bold text-[#F5F5F7]">
+          <h1 className="font-display text-2xl sm:text-3xl font-bold text-[var(--text-primary)]">
             YouTube Music & Video
           </h1>
-          <p className="mt-1 text-sm text-[#9494A3]">
+          <p className="mt-1.5 text-sm text-[var(--text-secondary)]">
             Search tracks, live sessions, and music videos — save favorites,
             build playlists, and watch or listen directly inside Vesper Audio.
           </p>
         </div>
         <Link
           to="/search"
-          className="text-xs font-medium text-violet-400 hover:text-violet-300 whitespace-nowrap self-start sm:self-auto"
+          className="text-xs font-medium text-[#fa233b] hover:underline whitespace-nowrap self-start sm:self-auto"
         >
           Switch to Jamendo Catalog →
         </Link>
@@ -329,7 +332,7 @@ export const YouTubePage: React.FC = () => {
       <div
         role="tablist"
         aria-label="YouTube sections"
-        className="flex items-center gap-1 p-1 rounded-lg bg-[#15151B] border border-[#22222E] w-fit max-w-full overflow-x-auto"
+        className="flex items-center gap-1 p-1 rounded-xl bg-[var(--bg-elevated)] border border-[var(--border-hairline)] w-fit max-w-full overflow-x-auto"
       >
         {(
           [
@@ -353,10 +356,10 @@ export const YouTubePage: React.FC = () => {
               }
               setSearchParams(next, { replace: true });
             }}
-            className={`px-3.5 py-1.5 rounded-md text-xs font-medium whitespace-nowrap transition-colors ${
+            className={`px-4 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
               sectionTab === id
-                ? 'bg-violet-600 text-white'
-                : 'text-[#9494A3] hover:text-white'
+                ? 'bg-[#fa233b] text-white shadow-sm'
+                : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
             }`}
           >
             {label}
@@ -364,11 +367,11 @@ export const YouTubePage: React.FC = () => {
         ))}
       </div>
 
-      {/* Offline Notice for Search Tab (Saved Favorites & Playlists remain browsable!) */}
+      {/* Offline Notice */}
       {!isOnline && (
-        <div className="rounded-xl border border-amber-500/30 bg-[#1B1712] p-4 flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-3 text-xs sm:text-sm text-amber-100">
-            <WifiOff className="w-5 h-5 text-amber-400 shrink-0" />
+        <div className="rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-3 text-xs sm:text-sm text-amber-600 dark:text-amber-300">
+            <WifiOff className="w-5 h-5 text-amber-500 shrink-0" />
             <span>
               You are offline. Saved Favorites & Playlists can be browsed here,
               while live YouTube streaming requires internet.
@@ -376,22 +379,22 @@ export const YouTubePage: React.FC = () => {
           </div>
           <Link
             to="/downloads"
-            className="inline-flex items-center rounded-lg bg-violet-600 px-3.5 py-2 text-xs font-medium text-white hover:bg-violet-500 whitespace-nowrap"
+            className="inline-flex items-center rounded-xl bg-[#fa233b] px-4 py-2 text-xs font-medium text-white hover:bg-[#e01e33] whitespace-nowrap"
           >
             Go to Offline Locker
           </Link>
         </div>
       )}
 
-      {/* Search Form (always shown on search tab when online, or quick-jump) */}
+      {/* Search Form */}
       {sectionTab === 'search' && isOnline && (
         <>
           <form
             onSubmit={handleSubmit}
-            className="flex flex-col sm:flex-row gap-2.5 max-w-2xl"
+            className="flex flex-col sm:flex-row gap-3 max-w-2xl"
           >
             <div className="relative flex-1">
-              <SearchIcon className="w-4 h-4 text-[#9494A3] absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <SearchIcon className="w-4 h-4 text-[var(--text-secondary)] absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
               <label htmlFor="youtube-search-input" className="sr-only">
                 Search YouTube music and videos
               </label>
@@ -401,12 +404,12 @@ export const YouTubePage: React.FC = () => {
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 placeholder="Search Congolese rumba, afrobeat, live sets, or music videos..."
-                className="w-full rounded-xl border border-[#2A2A38] bg-[#15151B] pl-11 pr-4 py-3 text-sm text-[#F5F5F7] placeholder:text-[#666678] focus:border-violet-500 focus:outline-none"
+                className="w-full rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-elevated)] pl-11 pr-4 py-3.5 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] focus:border-[#fa233b] focus:outline-none shadow-sm"
               />
             </div>
             <button
               type="submit"
-              className="rounded-xl bg-violet-600 px-5 py-3 text-sm font-medium text-white hover:bg-violet-500 transition-colors whitespace-nowrap shrink-0"
+              className="rounded-2xl bg-[#fa233b] px-6 py-3.5 text-sm font-medium text-white hover:bg-[#e01e33] transition-transform hover:scale-105 shadow-md shadow-[#fa233b]/25 whitespace-nowrap shrink-0"
             >
               Search YouTube
             </button>
@@ -415,7 +418,7 @@ export const YouTubePage: React.FC = () => {
           {/* Suggestions & Filter Tabs */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
             <div className="flex flex-wrap items-center gap-2 text-xs">
-              <span className="text-[#666678]">Try:</span>
+              <span className="text-[var(--text-secondary)]">Try:</span>
               {SUGGESTED_YT_QUERIES.map((q) => (
                 <button
                   key={q}
@@ -424,10 +427,10 @@ export const YouTubePage: React.FC = () => {
                     setInputValue(q);
                     setSubmittedQuery(q);
                   }}
-                  className={`rounded-md px-2.5 py-1 transition-colors ${
+                  className={`rounded-xl px-3 py-1.5 transition-colors ${
                     submittedQuery.toLowerCase() === q
-                      ? 'bg-violet-600/20 text-violet-300 border border-violet-500/40'
-                      : 'bg-[#1A1A22] text-[#9494A3] hover:text-white border border-transparent'
+                      ? 'bg-[#fa233b]/20 text-[#fa233b] border border-[#fa233b]/40 font-medium'
+                      : 'bg-[var(--bg-elevated)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--border-hairline)]'
                   }`}
                 >
                   {q}
@@ -438,7 +441,7 @@ export const YouTubePage: React.FC = () => {
             <div
               role="tablist"
               aria-label="YouTube result filter"
-              className="flex items-center gap-1 p-1 rounded-lg bg-[#15151B] border border-[#22222E] w-fit"
+              className="flex items-center gap-1 p-1 rounded-xl bg-[var(--bg-elevated)] border border-[var(--border-hairline)] w-fit"
             >
               {FILTER_TABS.map((tab) => (
                 <button
@@ -447,10 +450,10 @@ export const YouTubePage: React.FC = () => {
                   role="tab"
                   aria-selected={filter === tab.id}
                   onClick={() => setFilter(tab.id)}
-                  className={`px-3 py-1.5 rounded-md text-xs font-medium whitespace-nowrap transition-colors ${
+                  className={`px-3.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
                     filter === tab.id
-                      ? 'bg-violet-600 text-white'
-                      : 'text-[#9494A3] hover:text-white'
+                      ? 'bg-[#fa233b] text-white shadow-sm'
+                      : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
                   }`}
                 >
                   {tab.label}
@@ -466,22 +469,22 @@ export const YouTubePage: React.FC = () => {
         <section
           ref={stageRef}
           aria-label="YouTube player stage"
-          className="rounded-2xl border border-[#2A2A38] bg-[#15151B] overflow-hidden"
+          className="rounded-3xl border border-[var(--border-hairline)] liquid-glass overflow-hidden shadow-2xl"
         >
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-[#22222E] px-4 py-3 sm:px-5">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-[var(--border-hairline)] px-5 py-4">
             <div className="min-w-0 flex-1">
-              <p className="text-xs font-medium text-violet-400">
+              <p className="text-xs font-semibold text-[#fa233b]">
                 Now Streaming in App
                 {activeQueue.length > 1 && activeQueueIndex !== -1
                   ? ` · ${activeQueueIndex + 1} of ${activeQueue.length}`
                   : ''}
               </p>
-              <h2 className="truncate text-sm sm:text-base font-semibold text-[#F5F5F7]">
+              <h2 className="truncate text-sm sm:text-base font-semibold text-[var(--text-primary)]">
                 {activeVideo.title}
               </h2>
             </div>
 
-            <div className="flex flex-wrap items-center justify-between sm:justify-end gap-2 shrink-0">
+            <div className="flex flex-wrap items-center justify-between sm:justify-end gap-2.5 shrink-0">
               {activeQueue.length > 1 && (
                 <div className="flex items-center gap-1">
                   <button
@@ -489,7 +492,7 @@ export const YouTubePage: React.FC = () => {
                     disabled={!hasPrevVideo}
                     onClick={handlePrevVideo}
                     aria-label="Previous YouTube video"
-                    className="min-w-[36px] min-h-[36px] inline-flex items-center justify-center rounded-lg border border-[#2A2A38] bg-[#181820] text-[#D4D4DF] hover:text-white disabled:opacity-40"
+                    className="min-w-[36px] min-h-[36px] inline-flex items-center justify-center rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-elevated)] text-[var(--text-primary)] hover:opacity-80 disabled:opacity-30"
                   >
                     <ChevronLeft className="w-4 h-4" />
                   </button>
@@ -498,22 +501,22 @@ export const YouTubePage: React.FC = () => {
                     disabled={!hasNextVideo}
                     onClick={handleNextVideo}
                     aria-label="Next YouTube video"
-                    className="min-w-[36px] min-h-[36px] inline-flex items-center justify-center rounded-lg border border-[#2A2A38] bg-[#181820] text-[#D4D4DF] hover:text-white disabled:opacity-40"
+                    className="min-w-[36px] min-h-[36px] inline-flex items-center justify-center rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-elevated)] text-[var(--text-primary)] hover:opacity-80 disabled:opacity-30"
                   >
                     <ChevronRight className="w-4 h-4" />
                   </button>
                 </div>
               )}
 
-              <div className="flex items-center rounded-lg border border-[#262632] bg-[#101015] p-0.5">
+              <div className="flex items-center rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-elevated)] p-1">
                 <button
                   type="button"
                   onClick={() => setPlayerMode('video')}
                   aria-pressed={playerMode === 'video'}
-                  className={`inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium whitespace-nowrap transition-colors ${
+                  className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium whitespace-nowrap transition-colors ${
                     playerMode === 'video'
-                      ? 'bg-violet-600 text-white'
-                      : 'text-[#9494A3] hover:text-white'
+                      ? 'bg-[#fa233b] text-white shadow-sm'
+                      : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
                   }`}
                 >
                   <MonitorPlay className="w-3.5 h-3.5" />
@@ -523,10 +526,10 @@ export const YouTubePage: React.FC = () => {
                   type="button"
                   onClick={() => setPlayerMode('music')}
                   aria-pressed={playerMode === 'music'}
-                  className={`inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium whitespace-nowrap transition-colors ${
+                  className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium whitespace-nowrap transition-colors ${
                     playerMode === 'music'
-                      ? 'bg-violet-600 text-white'
-                      : 'text-[#9494A3] hover:text-white'
+                      ? 'bg-[#fa233b] text-white shadow-sm'
+                      : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
                   }`}
                 >
                   <Headphones className="w-3.5 h-3.5" />
@@ -534,7 +537,7 @@ export const YouTubePage: React.FC = () => {
                 </button>
               </div>
 
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-2">
                 <button
                   type="button"
                   onClick={() => void toggleYouTubeFavorite(activeVideo)}
@@ -543,10 +546,10 @@ export const YouTubePage: React.FC = () => {
                       ? `Remove ${activeVideo.title} from YouTube favorites`
                       : `Save ${activeVideo.title} to YouTube favorites`
                   }
-                  className={`inline-flex items-center justify-center rounded-lg border p-2 transition-colors ${
+                  className={`inline-flex items-center justify-center rounded-xl border p-2.5 transition-colors ${
                     isYouTubeFavorite(activeVideo.videoId)
-                      ? 'border-violet-500/50 bg-violet-600/20 text-violet-300'
-                      : 'border-[#2A2A38] bg-[#181820] text-[#9494A3] hover:text-white'
+                      ? 'border-[#fa233b]/50 bg-[#fa233b]/20 text-[#fa233b]'
+                      : 'border-[var(--border-hairline)] bg-[var(--bg-elevated)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
                   }`}
                 >
                   <Heart
@@ -560,7 +563,7 @@ export const YouTubePage: React.FC = () => {
                   type="button"
                   onClick={() => setPlaylistModalVideo(activeVideo)}
                   aria-label={`Add ${activeVideo.title} to YouTube playlist`}
-                  className="inline-flex items-center justify-center rounded-lg border border-[#2A2A38] bg-[#181820] p-2 text-[#9494A3] hover:text-white"
+                  className="inline-flex items-center justify-center rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-elevated)] p-2.5 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
                 >
                   <ListPlus className="w-4 h-4" />
                 </button>
@@ -570,7 +573,7 @@ export const YouTubePage: React.FC = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={`Open ${activeVideo.title} on YouTube`}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-[#2A2A38] bg-[#181820] px-3 py-1.5 text-xs font-medium text-[#D4D4DF] hover:border-violet-500/50 hover:text-white whitespace-nowrap"
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-elevated)] px-3.5 py-2 text-xs font-medium text-[var(--text-primary)] hover:border-[#fa233b]/50 transition-colors whitespace-nowrap"
                 >
                   <ExternalLink className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">YouTube</span>
@@ -580,7 +583,7 @@ export const YouTubePage: React.FC = () => {
                   type="button"
                   onClick={() => setActiveVideo(null)}
                   aria-label="Close YouTube player"
-                  className="inline-flex items-center justify-center rounded-lg border border-[#2A2A38] bg-[#181820] p-2 text-[#9494A3] hover:text-white"
+                  className="inline-flex items-center justify-center rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-elevated)] p-2.5 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -590,7 +593,7 @@ export const YouTubePage: React.FC = () => {
 
           {playerMode === 'video' ? (
             <div className="bg-black">
-              <div className="aspect-video w-full max-h-[420px] mx-auto">
+              <div className="aspect-video w-full max-h-[480px] mx-auto">
                 <iframe
                   key={activeVideo.videoId}
                   src={activeVideo.embedUrl}
@@ -602,8 +605,8 @@ export const YouTubePage: React.FC = () => {
               </div>
             </div>
           ) : (
-            <div className="p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-5 bg-[#121218]">
-              <div className="w-full sm:w-64 shrink-0 overflow-hidden rounded-xl border border-[#262632] bg-black aspect-video">
+            <div className="p-6 flex flex-col sm:flex-row items-start sm:items-center gap-6 bg-[var(--bg-surface)]">
+              <div className="w-full sm:w-72 shrink-0 overflow-hidden rounded-2xl border border-[var(--border-hairline)] bg-black aspect-video shadow-lg">
                 <iframe
                   key={`${activeVideo.videoId}-music`}
                   src={activeVideo.embedUrl}
@@ -613,19 +616,19 @@ export const YouTubePage: React.FC = () => {
                   className="w-full h-full border-0"
                 />
               </div>
-              <div className="min-w-0 flex-1 space-y-2">
-                <p className="text-xs font-medium text-violet-400">
+              <div className="min-w-0 flex-1 space-y-2.5">
+                <p className="text-xs font-semibold text-[#fa233b]">
                   Music Focus Mode
                 </p>
-                <h3 className="font-display text-lg font-semibold text-[#F5F5F7]">
+                <h3 className="font-display text-xl font-bold text-[var(--text-primary)]">
                   {activeVideo.title}
                 </h3>
-                <p className="text-xs text-[#9494A3]">
+                <p className="text-xs text-[var(--text-secondary)]">
                   {activeVideo.channelTitle} · {activeVideo.durationLabel} ·{' '}
                   {activeVideo.viewCountLabel}
                 </p>
                 {activeVideo.description && (
-                  <p className="text-xs text-[#7E7E90] line-clamp-2 max-w-xl">
+                  <p className="text-xs text-[var(--text-secondary)] line-clamp-2 max-w-xl">
                     {activeVideo.description}
                   </p>
                 )}
@@ -633,7 +636,7 @@ export const YouTubePage: React.FC = () => {
             </div>
           )}
 
-          <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[#22222E] px-4 py-2.5 sm:px-5 text-[11px] text-[#7E7E90]">
+          <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[var(--border-hairline)] px-5 py-3 text-[11px] text-[var(--text-secondary)]">
             <span>
               {activeVideo.channelTitle} · {activeVideo.durationLabel} ·{' '}
               {activeVideo.viewCountLabel}
@@ -643,31 +646,31 @@ export const YouTubePage: React.FC = () => {
         </section>
       )}
 
-      {/* TAB 1: SEARCH RESULTS */}
+      {/* SEARCH TAB */}
       {sectionTab === 'search' && isOnline && (
         <>
           {isLoading && (
             <div
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
               aria-busy="true"
             >
               {[1, 2, 3, 4, 5, 6].map((i) => (
                 <div
                   key={i}
-                  className="rounded-xl border border-[#22222E] bg-[#15151B] p-3.5 space-y-3 animate-pulse"
+                  className="rounded-2xl border border-[var(--border-hairline)] liquid-glass-card p-4 space-y-3.5 animate-pulse"
                 >
-                  <div className="aspect-video w-full rounded-lg bg-[#1D1D26]" />
-                  <div className="h-4 w-3/4 rounded bg-[#1D1D26]" />
-                  <div className="h-3 w-1/2 rounded bg-[#1D1D26]" />
+                  <div className="aspect-video w-full rounded-xl bg-[var(--bg-elevated)]" />
+                  <div className="h-4 w-3/4 rounded bg-[var(--bg-elevated)]" />
+                  <div className="h-3 w-1/2 rounded bg-[var(--bg-elevated)]" />
                 </div>
               ))}
             </div>
           )}
 
           {isError && (
-            <div className="rounded-xl border border-rose-500/30 bg-[#1B1317] p-5 flex items-center justify-between gap-4">
-              <div className="flex items-center gap-3 text-sm text-rose-200">
-                <AlertCircle className="w-5 h-5 text-rose-400 shrink-0" />
+            <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 p-6 flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3 text-sm text-rose-500">
+                <AlertCircle className="w-5 h-5 shrink-0" />
                 <span>
                   Unable to reach YouTube search right now. Please try again.
                 </span>
@@ -675,7 +678,7 @@ export const YouTubePage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => void refetch()}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-rose-400/30 px-3 py-1.5 text-xs font-medium text-rose-100 hover:bg-rose-500/10 whitespace-nowrap"
+                className="inline-flex items-center gap-1.5 rounded-xl border border-rose-500/30 px-4 py-2 text-xs font-medium text-rose-500 hover:bg-rose-500/10 whitespace-nowrap"
               >
                 <RefreshCw className="w-3.5 h-3.5" />
                 Retry
@@ -686,12 +689,12 @@ export const YouTubePage: React.FC = () => {
           {data && !isLoading && (
             <section className="space-y-4">
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <h2 className="text-base font-semibold text-[#F5F5F7]">
+                <h2 className="text-base font-semibold text-[var(--text-primary)]">
                   {submittedQuery
                     ? `Results for "${submittedQuery}" (${data.results.length})`
                     : `Featured Music & Live Sessions (${data.results.length})`}
                 </h2>
-                <p className="text-xs text-[#7E7E90]">
+                <p className="text-xs text-[var(--text-secondary)]">
                   {data.sourceMode === 'youtube-api'
                     ? 'YouTube Data API v3'
                     : data.sourceMode === 'youtube-public'
@@ -701,8 +704,8 @@ export const YouTubePage: React.FC = () => {
               </div>
 
               {data.results.length === 0 ? (
-                <div className="rounded-xl border border-[#22222E] bg-[#15151B] p-8 text-center space-y-3">
-                  <p className="text-sm text-[#9494A3]">
+                <div className="rounded-2xl border border-[var(--border-hairline)] liquid-glass-card p-10 text-center space-y-3">
+                  <p className="text-sm text-[var(--text-secondary)]">
                     No YouTube videos matched &ldquo;{submittedQuery}&rdquo;. Try a
                     broader music keyword or clear the filter.
                   </p>
@@ -713,13 +716,13 @@ export const YouTubePage: React.FC = () => {
                       setSubmittedQuery('');
                       setFilter('all');
                     }}
-                    className="inline-flex items-center rounded-lg border border-[#2A2A38] bg-[#181820] px-4 py-2 text-xs font-medium text-[#F5F5F7] hover:border-violet-500/50"
+                    className="inline-flex items-center rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-elevated)] px-4 py-2.5 text-xs font-medium text-[var(--text-primary)] hover:border-[#fa233b]/50"
                   >
                     Reset Search
                   </button>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                   {data.results.map((video) =>
                     renderVideoCard(video, data.results)
                   )}
@@ -730,11 +733,11 @@ export const YouTubePage: React.FC = () => {
         </>
       )}
 
-      {/* TAB 2: SAVED FAVORITES */}
+      {/* FAVORITES TAB */}
       {sectionTab === 'favorites' && (
-        <section className="space-y-4">
+        <section className="space-y-5">
           <div className="flex items-center justify-between gap-2">
-            <h2 className="text-base font-semibold text-[#F5F5F7]">
+            <h2 className="text-lg font-semibold text-[var(--text-primary)]">
               Saved YouTube Favorites ({youtubeFavorites.length})
             </h2>
             {youtubeFavorites.length > 0 && isOnline && (
@@ -743,7 +746,7 @@ export const YouTubePage: React.FC = () => {
                 onClick={() =>
                   handleSelectVideo(youtubeFavorites[0], 'video', youtubeFavorites)
                 }
-                className="inline-flex items-center gap-1.5 rounded-lg bg-violet-600 px-3.5 py-1.5 text-xs font-medium text-white hover:bg-violet-500 whitespace-nowrap"
+                className="inline-flex items-center gap-2 rounded-xl bg-[#fa233b] px-4 py-2.5 text-xs font-medium text-white hover:bg-[#e01e33] transition-transform hover:scale-105 shadow-md shadow-[#fa233b]/25 whitespace-nowrap"
               >
                 <Play className="w-3.5 h-3.5 fill-current" />
                 Play All
@@ -752,18 +755,18 @@ export const YouTubePage: React.FC = () => {
           </div>
 
           {youtubeFavorites.length === 0 ? (
-            <div className="rounded-xl border border-[#22222E] bg-[#15151B] p-8 text-center space-y-2">
-              <Heart className="w-7 h-7 text-[#666678] mx-auto" />
-              <p className="text-sm font-medium text-[#F5F5F7]">
+            <div className="rounded-2xl border border-[var(--border-hairline)] liquid-glass-card p-10 text-center space-y-3">
+              <Heart className="w-8 h-8 text-[var(--text-secondary)] mx-auto" />
+              <p className="text-sm font-medium text-[var(--text-primary)]">
                 No saved YouTube favorites yet
               </p>
-              <p className="text-xs text-[#9494A3] max-w-md mx-auto">
+              <p className="text-xs text-[var(--text-secondary)] max-w-md mx-auto">
                 Tap the heart icon on any YouTube track or music video to
                 bookmark it here and sync across your signed-in devices.
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {youtubeFavorites.map((video) =>
                 renderVideoCard(video, youtubeFavorites)
               )}
@@ -772,18 +775,17 @@ export const YouTubePage: React.FC = () => {
         </section>
       )}
 
-      {/* TAB 3: YOUTUBE PLAYLISTS */}
+      {/* PLAYLISTS TAB */}
       {sectionTab === 'playlists' && (
-        <section className="space-y-5">
-          {/* Create Playlist Form */}
+        <section className="space-y-6">
           <form
             onSubmit={handleCreatePlaylistForm(onCreatePlaylist)}
-            className="rounded-xl border border-[#22222E] bg-[#15151B] p-4 flex flex-col sm:flex-row sm:items-end gap-3"
+            className="rounded-2xl border border-[var(--border-hairline)] liquid-glass-card p-5 flex flex-col sm:flex-row sm:items-end gap-3.5"
           >
             <div className="flex-1">
               <label
                 htmlFor="create-yt-playlist-name"
-                className="block text-xs font-medium text-[#9494A3]"
+                className="block text-xs font-medium text-[var(--text-secondary)] mb-1.5"
               >
                 Create YouTube Playlist
               </label>
@@ -792,10 +794,10 @@ export const YouTubePage: React.FC = () => {
                 type="text"
                 placeholder="e.g. Kinshasa Rumba Favorites"
                 {...register('name')}
-                className="mt-1.5 w-full rounded-lg border border-[#2A2A38] bg-[#0E0E12] px-3 py-2 text-sm text-[#F5F5F7] placeholder:text-[#666678] focus:border-violet-500 focus:outline-none"
+                className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-elevated)] px-3.5 py-2.5 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] focus:border-[#fa233b] focus:outline-none"
               />
               {playlistErrors.name && (
-                <p className="mt-1 text-xs text-rose-400">
+                <p className="mt-1 text-xs text-rose-500">
                   {playlistErrors.name.message}
                 </p>
               )}
@@ -803,7 +805,7 @@ export const YouTubePage: React.FC = () => {
             <button
               type="submit"
               disabled={isCreatingPlaylist}
-              className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-violet-600 px-4 py-2 text-xs font-medium text-white hover:bg-violet-500 transition-colors whitespace-nowrap min-h-[38px]"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#fa233b] px-5 py-2.5 text-xs font-medium text-white hover:bg-[#e01e33] transition-transform hover:scale-105 shadow-md shadow-[#fa233b]/20 whitespace-nowrap min-h-[42px]"
             >
               <Plus className="w-4 h-4" />
               Create Playlist
@@ -811,29 +813,28 @@ export const YouTubePage: React.FC = () => {
           </form>
 
           {youtubePlaylists.length === 0 ? (
-            <div className="rounded-xl border border-[#22222E] bg-[#15151B] p-8 text-center space-y-2">
-              <ListMusic className="w-7 h-7 text-[#666678] mx-auto" />
-              <p className="text-sm font-medium text-[#F5F5F7]">
+            <div className="rounded-2xl border border-[var(--border-hairline)] liquid-glass-card p-10 text-center space-y-3">
+              <ListMusic className="w-8 h-8 text-[var(--text-secondary)] mx-auto" />
+              <p className="text-sm font-medium text-[var(--text-primary)]">
                 No YouTube playlists created yet
               </p>
-              <p className="text-xs text-[#9494A3] max-w-md mx-auto">
+              <p className="text-xs text-[var(--text-secondary)] max-w-md mx-auto">
                 Create a playlist above or click the playlist icon on any video
                 to start organizing YouTube sessions.
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-              {/* Playlist Selector List */}
-              <div className="lg:col-span-4 space-y-2">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+              <div className="lg:col-span-4 space-y-2.5">
                 {youtubePlaylists.map((pl) => {
                   const isActive = selectedPlaylist?.id === pl.id;
                   return (
                     <div
                       key={pl.id}
-                      className={`flex items-center justify-between gap-2 rounded-xl border p-3 transition-colors ${
+                      className={`flex items-center justify-between gap-2.5 rounded-2xl border p-4 transition-all liquid-glass-card ${
                         isActive
-                          ? 'border-violet-500/60 bg-[#1A1A24]'
-                          : 'border-[#22222E] bg-[#15151B] hover:border-[#343446]'
+                          ? 'border-[#fa233b] bg-[#fa233b]/10 shadow-md'
+                          : 'border-[var(--border-hairline)]'
                       }`}
                     >
                       <button
@@ -841,10 +842,10 @@ export const YouTubePage: React.FC = () => {
                         onClick={() => setSelectedPlaylistId(pl.id)}
                         className="flex-1 min-w-0 text-left"
                       >
-                        <p className="truncate text-sm font-semibold text-[#F5F5F7]">
+                        <p className="truncate text-sm font-semibold text-[var(--text-primary)]">
                           {pl.name}
                         </p>
-                        <p className="text-xs text-[#9494A3]">
+                        <p className="text-xs text-[var(--text-secondary)] mt-0.5">
                           {pl.videos.length}{' '}
                           {pl.videos.length === 1 ? 'video' : 'videos'}
                         </p>
@@ -853,7 +854,7 @@ export const YouTubePage: React.FC = () => {
                         type="button"
                         onClick={() => void deleteYouTubePlaylist(pl.id)}
                         aria-label={`Delete playlist ${pl.name}`}
-                        className="min-w-[36px] min-h-[36px] inline-flex items-center justify-center rounded-lg text-[#9494A3] hover:text-rose-400 hover:bg-rose-500/10"
+                        className="min-w-[36px] min-h-[36px] inline-flex items-center justify-center rounded-xl text-[var(--text-secondary)] hover:text-rose-500 hover:bg-rose-500/10 transition-colors"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -862,16 +863,15 @@ export const YouTubePage: React.FC = () => {
                 })}
               </div>
 
-              {/* Selected Playlist Items */}
               <div className="lg:col-span-8 space-y-4">
                 {selectedPlaylist && (
                   <>
                     <div className="flex flex-wrap items-center justify-between gap-3">
                       <div>
-                        <h3 className="text-base font-semibold text-[#F5F5F7]">
+                        <h3 className="text-lg font-semibold text-[var(--text-primary)]">
                           {selectedPlaylist.name}
                         </h3>
-                        <p className="text-xs text-[#9494A3]">
+                        <p className="text-xs text-[var(--text-secondary)]">
                           {selectedPlaylist.videos.length}{' '}
                           {selectedPlaylist.videos.length === 1
                             ? 'video'
@@ -888,7 +888,7 @@ export const YouTubePage: React.FC = () => {
                               selectedPlaylist.videos
                             )
                           }
-                          className="inline-flex items-center gap-1.5 rounded-lg bg-violet-600 px-3.5 py-1.5 text-xs font-medium text-white hover:bg-violet-500 whitespace-nowrap"
+                          className="inline-flex items-center gap-2 rounded-xl bg-[#fa233b] px-4 py-2.5 text-xs font-medium text-white hover:bg-[#e01e33] transition-transform hover:scale-105 shadow-md shadow-[#fa233b]/25 whitespace-nowrap"
                         >
                           <Play className="w-3.5 h-3.5 fill-current" />
                           Play Playlist
@@ -897,12 +897,12 @@ export const YouTubePage: React.FC = () => {
                     </div>
 
                     {selectedPlaylist.videos.length === 0 ? (
-                      <div className="rounded-xl border border-[#22222E] bg-[#15151B] p-8 text-center text-xs text-[#9494A3]">
+                      <div className="rounded-2xl border border-[var(--border-hairline)] liquid-glass-card p-10 text-center text-xs text-[var(--text-secondary)]">
                         This playlist is empty. Search YouTube and click the
                         playlist icon on any video to add tracks here.
                       </div>
                     ) : (
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                         {selectedPlaylist.videos.map((video) =>
                           renderVideoCard(
                             video,
@@ -916,7 +916,7 @@ export const YouTubePage: React.FC = () => {
                                 )
                               }
                               aria-label={`Remove ${video.title} from ${selectedPlaylist.name}`}
-                              className="min-w-[40px] min-h-[40px] inline-flex items-center justify-center rounded-lg border border-[#2A2A38] bg-[#181820] text-[#9494A3] hover:text-rose-400"
+                              className="min-w-[40px] min-h-[40px] inline-flex items-center justify-center rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-elevated)] text-[var(--text-secondary)] hover:text-rose-500 transition-colors"
                             >
                               <Trash2 className="w-4 h-4" />
                             </button>
