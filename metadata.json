@@ -1,0 +1,8 @@
+{
+  "name": "Vesper Audio",
+  "description": "Jamendo-powered offline-capable music streaming PWA with license verification, playlists, and authorized downloads.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
