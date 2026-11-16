@@ -101,7 +101,7 @@ export const SearchPage: React.FC = () => {
         <div className="pt-2">
           <Link
             to="/downloads"
-            className="inline-flex items-center rounded-lg bg-violet-600 px-4 py-2 text-xs font-medium text-white hover:bg-violet-500"
+            className="inline-flex items-center rounded-lg bg-sky-600 px-4 py-2 text-xs font-medium text-white hover:bg-sky-500"
           >
             Go to Offline Downloads
           </Link>
@@ -127,7 +127,7 @@ export const SearchPage: React.FC = () => {
               ? `/youtube?q=${encodeURIComponent(inputValue.trim())}`
               : '/youtube'
           }
-          className="text-xs font-medium text-violet-400 hover:text-violet-300 whitespace-nowrap self-start sm:self-auto"
+          className="text-xs font-medium text-sky-400 hover:text-sky-300 whitespace-nowrap self-start sm:self-auto"
         >
           Search YouTube instead →
         </Link>
@@ -145,7 +145,7 @@ export const SearchPage: React.FC = () => {
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           placeholder="Search tracks, artists, albums, or tags..."
-          className="w-full rounded-xl border border-[#2A2A38] bg-[#15151B] pl-11 pr-4 py-3 text-sm text-[#F5F5F7] placeholder:text-[#666678] focus:border-violet-500 focus:outline-none"
+          className="w-full rounded-xl border border-[#2A2A38] bg-[#15151B] pl-11 pr-4 py-3 text-sm text-[#F5F5F7] placeholder:text-[#666678] focus:border-sky-500 focus:outline-none"
         />
       </div>
 
@@ -162,7 +162,7 @@ export const SearchPage: React.FC = () => {
             key={item}
             type="button"
             onClick={() => setInputValue(item)}
-            className="rounded-md border border-[#262632] bg-[#15151B] px-2.5 py-1 text-[#D4D4DF] hover:border-violet-500/50"
+            className="rounded-md border border-[#262632] bg-[#15151B] px-2.5 py-1 text-[#D4D4DF] hover:border-sky-500/50"
           >
             {item}
           </button>
@@ -190,7 +190,7 @@ export const SearchPage: React.FC = () => {
               onClick={() => setCategory(tab)}
               className={`px-3.5 py-1.5 rounded-md text-xs font-medium capitalize transition-colors ${
                 category === tab
-                  ? 'bg-violet-600 text-white'
+                  ? 'bg-sky-600 text-white'
                   : 'text-[#9494A3] hover:text-white'
               }`}
             >
@@ -210,7 +210,7 @@ export const SearchPage: React.FC = () => {
               onClick={() => handleSelectGenre(g)}
               className={`px-3.5 py-2 rounded-lg text-xs font-medium border transition-colors ${
                 selectedGenre === g
-                  ? 'border-violet-500 bg-violet-500/15 text-violet-300'
+                  ? 'border-sky-500 bg-sky-500/15 text-sky-300'
                   : 'border-[#262632] bg-[#15151B] text-[#9494A3] hover:text-white'
               }`}
             >

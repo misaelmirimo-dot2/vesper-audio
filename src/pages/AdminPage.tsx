@@ -80,7 +80,7 @@ export const AdminPage: React.FC = () => {
     <div className="space-y-8">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-xs font-medium text-violet-400">
+          <div className="flex items-center gap-2 text-xs font-medium text-sky-400">
             <Shield className="w-4 h-4" />
             <span>Platform Administration</span>
           </div>
@@ -93,7 +93,7 @@ export const AdminPage: React.FC = () => {
           href="/api/docs"
           target="_blank"
           rel="noreferrer"
-          className="inline-flex items-center gap-1.5 rounded-lg border border-[#2A2A38] bg-[#15151B] px-3.5 py-2 text-xs font-medium text-[#F5F5F7] hover:border-violet-500/40"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-[#2A2A38] bg-[#15151B] px-3.5 py-2 text-xs font-medium text-[#F5F5F7] hover:border-sky-500/40"
         >
           OpenAPI Specification
           <ExternalLink className="w-3.5 h-3.5" />
@@ -166,7 +166,7 @@ export const AdminPage: React.FC = () => {
             }
             className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors ${
               data.settings.downloadsEnabledGlobally
-                ? 'bg-violet-600'
+                ? 'bg-sky-600'
                 : 'bg-[#2A2A38]'
             }`}
           >
@@ -202,7 +202,7 @@ export const AdminPage: React.FC = () => {
             }
             className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors ${
               data.settings.commercialModeEnforced
-                ? 'bg-violet-600'
+                ? 'bg-sky-600'
                 : 'bg-[#2A2A38]'
             }`}
           >

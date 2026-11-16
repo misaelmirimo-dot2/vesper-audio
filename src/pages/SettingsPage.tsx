@@ -2,18 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import {
-  LogIn,
-  LogOut,
-  Moon,
-  ShieldAlert,
-  Sun,
-  User,
-  WifiOff,
-} from 'lucide-react';
+import { LogIn, LogOut, ShieldAlert, User, WifiOff } from 'lucide-react';
 import { useAuth } from '../context/AuthContext.tsx';
 import { useLibrary } from '../context/LibraryContext.tsx';
-import { useTheme } from '../context/ThemeContext.tsx';
 import { PWAInstallButton } from '../components/PWAInstallButton.tsx';
 
 const profileSchema = z.object({
@@ -32,7 +23,6 @@ export const SettingsPage: React.FC = () => {
     simulatedOffline,
     setSimulatedOffline,
   } = useLibrary();
-  const { theme, toggleTheme } = useTheme();
 
   const [savedNotice, setSavedNotice] = useState(false);
 
@@ -67,65 +57,29 @@ export const SettingsPage: React.FC = () => {
   return (
     <div className="space-y-8 max-w-3xl">
       <div>
-        <h1 className="font-display text-2xl sm:text-3xl font-bold text-[var(--text-primary)]">
+        <h1 className="font-display text-2xl font-bold text-[#F5F5F7]">
           Account &amp; Settings
         </h1>
-        <p className="mt-1.5 text-sm text-[var(--text-secondary)]">
-          Manage your Apple Music style light/dark appearance, Creative Commons
-          licensing mode, and offline PWA preferences.
+        <p className="mt-1 text-sm text-[#9494A3]">
+          Manage your profile, Creative Commons licensing mode, and offline PWA
+          preferences.
         </p>
       </div>
 
-      {/* Appearance & Theme Section */}
-      <section className="rounded-2xl border border-[var(--border-hairline)] liquid-glass-card p-6 space-y-4">
-        <div className="flex items-center justify-between gap-4">
-          <div className="space-y-1">
-            <h2 className="text-base font-semibold text-[var(--text-primary)] flex items-center gap-2">
-              {theme === 'light' ? (
-                <Sun className="w-5 h-5 text-amber-500" />
-              ) : (
-                <Moon className="w-5 h-5 text-[#fa233b]" />
-              )}
-              Appearance Mode
-            </h2>
-            <p className="text-xs text-[var(--text-secondary)]">
-              Choose between Apple Music style clean Light Mode or Dark Mode.
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={toggleTheme}
-            className="inline-flex items-center gap-2 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-elevated)] px-4 py-2.5 text-xs font-medium text-[var(--text-primary)] hover:border-[#fa233b]/50 shadow-sm transition-all hover-glass-lift"
-          >
-            {theme === 'light' ? (
-              <>
-                <Moon className="w-4 h-4 text-[#fa233b]" />
-                <span>Switch to Dark Mode</span>
-              </>
-            ) : (
-              <>
-                <Sun className="w-4 h-4 text-amber-500" />
-                <span>Switch to Light Mode</span>
-              </>
-            )}
-          </button>
-        </div>
-      </section>
-
       {/* Account Card */}
-      <section className="rounded-2xl border border-[var(--border-hairline)] liquid-glass-card p-6 space-y-5">
+      <section className="rounded-xl border border-[#22222E] bg-[#15151B] p-6 space-y-5">
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-2xl bg-[var(--bg-elevated)] border border-[var(--border-hairline)] flex items-center justify-center">
-              <User className="w-5 h-5 text-[#fa233b]" />
+          <div className="flex items-center gap-3">
+            <div className="w-11 h-11 rounded-full bg-[#1E1E28] border border-[#2A2A38] flex items-center justify-center">
+              <User className="w-5 h-5 text-sky-400" />
             </div>
             <div>
-              <h2 className="text-base font-semibold text-[var(--text-primary)]">
+              <h2 className="text-base font-semibold text-[#F5F5F7]">
                 {firebaseUser
                   ? profile?.username || firebaseUser.displayName || 'Listener'
                   : 'Local Offline Profile'}
               </h2>
-              <p className="text-xs text-[var(--text-secondary)]">
+              <p className="text-xs text-[#9494A3]">
                 {firebaseUser
                   ? firebaseUser.email
                   : 'Sign in with Google to sync playlists, favorites, and download records to PostgreSQL.'}
@@ -137,7 +91,7 @@ export const SettingsPage: React.FC = () => {
             <button
               type="button"
               onClick={() => void signOut()}
-              className="inline-flex items-center gap-2 rounded-xl border border-[var(--border-hairline)] px-4 py-2 text-xs font-medium text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
+              className="inline-flex items-center gap-2 rounded-lg border border-[#2A2A38] px-4 py-2 text-xs font-medium text-[#F5F5F7] hover:bg-[#1C1C24]"
             >
               <LogOut className="w-3.5 h-3.5" />
               Sign out
@@ -146,7 +100,7 @@ export const SettingsPage: React.FC = () => {
             <button
               type="button"
               onClick={() => void signInWithGoogle()}
-              className="inline-flex items-center gap-2 rounded-xl bg-[#fa233b] px-4 py-2 text-xs font-medium text-white hover:bg-[#e01e33] transition-transform hover:scale-105 shadow-md shadow-[#fa233b]/25"
+              className="inline-flex items-center gap-2 rounded-lg bg-sky-600 px-4 py-2 text-xs font-medium text-white hover:bg-sky-500"
             >
               <LogIn className="w-3.5 h-3.5" />
               Sign in with Google
@@ -155,18 +109,18 @@ export const SettingsPage: React.FC = () => {
         </div>
 
         {authError && (
-          <p className="text-xs text-rose-500">{authError}</p>
+          <p className="text-xs text-rose-400">{authError}</p>
         )}
 
         {firebaseUser && (
           <form
             onSubmit={handleSubmit(onSaveProfile)}
-            className="border-t border-[var(--border-hairline)] pt-5 space-y-4"
+            className="border-t border-[#22222E] pt-5 space-y-4"
           >
             <div>
               <label
                 htmlFor="profile-username"
-                className="block text-xs text-[var(--text-secondary)] mb-1.5"
+                className="block text-xs text-[#9494A3] mb-1.5"
               >
                 Display Name
               </label>
@@ -174,10 +128,10 @@ export const SettingsPage: React.FC = () => {
                 id="profile-username"
                 type="text"
                 {...register('username')}
-                className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-elevated)] px-3.5 py-2.5 text-sm text-[var(--text-primary)] focus:border-[#fa233b] focus:outline-none"
+                className="w-full rounded-lg border border-[#2A2A38] bg-[#0E0E12] px-3.5 py-2 text-sm text-[#F5F5F7] focus:border-sky-500 focus:outline-none"
               />
               {errors.username && (
-                <p className="mt-1 text-xs text-rose-500">
+                <p className="mt-1 text-xs text-rose-400">
                   {errors.username.message}
                 </p>
               )}
@@ -186,7 +140,7 @@ export const SettingsPage: React.FC = () => {
             <div>
               <label
                 htmlFor="profile-bio"
-                className="block text-xs text-[var(--text-secondary)] mb-1.5"
+                className="block text-xs text-[#9494A3] mb-1.5"
               >
                 Listener Bio
               </label>
@@ -194,7 +148,7 @@ export const SettingsPage: React.FC = () => {
                 id="profile-bio"
                 rows={2}
                 {...register('bio')}
-                className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-elevated)] px-3.5 py-2.5 text-sm text-[var(--text-primary)] focus:border-[#fa233b] focus:outline-none"
+                className="w-full rounded-lg border border-[#2A2A38] bg-[#0E0E12] px-3.5 py-2 text-sm text-[#F5F5F7] focus:border-sky-500 focus:outline-none"
               />
             </div>
 
@@ -202,12 +156,12 @@ export const SettingsPage: React.FC = () => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="rounded-xl bg-[#fa233b] px-4 py-2 text-xs font-medium text-white hover:bg-[#e01e33] transition-colors"
+                className="rounded-lg bg-sky-600 px-4 py-2 text-xs font-medium text-white hover:bg-sky-500"
               >
                 Save Profile
               </button>
               {savedNotice && (
-                <span className="text-xs text-emerald-500">
+                <span className="text-xs text-emerald-400">
                   Profile saved to PostgreSQL.
                 </span>
               )}
@@ -217,14 +171,14 @@ export const SettingsPage: React.FC = () => {
       </section>
 
       {/* Licensing & Offline Controls */}
-      <section className="rounded-2xl border border-[var(--border-hairline)] liquid-glass-card divide-y divide-[var(--border-hairline)]">
-        <div className="flex items-center justify-between gap-4 p-5 sm:p-6">
+      <section className="rounded-xl border border-[#22222E] bg-[#15151B] divide-y divide-[#22222E]">
+        <div className="flex items-center justify-between gap-4 p-5">
           <div className="space-y-1">
-            <div className="flex items-center gap-2 text-sm font-medium text-[var(--text-primary)]">
-              <ShieldAlert className="w-4 h-4 text-[#fa233b]" />
+            <div className="flex items-center gap-2 text-sm font-medium text-[#F5F5F7]">
+              <ShieldAlert className="w-4 h-4 text-sky-400" />
               <span>Commercial Use Enforcement Mode</span>
             </div>
-            <p className="text-xs text-[var(--text-secondary)]">
+            <p className="text-xs text-[#9494A3]">
               When enabled, offline downloads for Non-Commercial licences (CC
               BY-NC, CC BY-NC-SA, CC BY-NC-ND) are strictly blocked.
             </p>
@@ -236,7 +190,7 @@ export const SettingsPage: React.FC = () => {
             aria-label="Toggle Commercial Use Enforcement Mode"
             onClick={() => void setCommercialUseMode(!commercialUseMode)}
             className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors ${
-              commercialUseMode ? 'bg-[#fa233b]' : 'bg-[var(--border-hairline)]'
+              commercialUseMode ? 'bg-sky-600' : 'bg-[#2A2A38]'
             }`}
           >
             <span
@@ -247,13 +201,13 @@ export const SettingsPage: React.FC = () => {
           </button>
         </div>
 
-        <div className="flex items-center justify-between gap-4 p-5 sm:p-6">
+        <div className="flex items-center justify-between gap-4 p-5">
           <div className="space-y-1">
-            <div className="flex items-center gap-2 text-sm font-medium text-[var(--text-primary)]">
-              <WifiOff className="w-4 h-4 text-amber-500" />
+            <div className="flex items-center gap-2 text-sm font-medium text-[#F5F5F7]">
+              <WifiOff className="w-4 h-4 text-amber-400" />
               <span>Offline Mode Preview</span>
             </div>
-            <p className="text-xs text-[var(--text-secondary)]">
+            <p className="text-xs text-[#9494A3]">
               Simulate disconnecting from the network to verify offline Cache
               Storage playback and saved playlists.
             </p>
@@ -265,7 +219,7 @@ export const SettingsPage: React.FC = () => {
             aria-label="Toggle Offline Mode Preview"
             onClick={() => void setSimulatedOffline(!simulatedOffline)}
             className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors ${
-              simulatedOffline ? 'bg-amber-500' : 'bg-[var(--border-hairline)]'
+              simulatedOffline ? 'bg-amber-500' : 'bg-[#2A2A38]'
             }`}
           >
             <span
@@ -276,12 +230,12 @@ export const SettingsPage: React.FC = () => {
           </button>
         </div>
 
-        <div className="flex items-center justify-between gap-4 p-5 sm:p-6">
+        <div className="flex items-center justify-between gap-4 p-5">
           <div>
-            <p className="text-sm font-medium text-[var(--text-primary)]">
+            <p className="text-sm font-medium text-[#F5F5F7]">
               Progressive Web App Installation
             </p>
-            <p className="text-xs text-[var(--text-secondary)]">
+            <p className="text-xs text-[#9494A3]">
               Install Vesper Audio for standalone windowing and iOS/Android
               offline shell caching.
             </p>

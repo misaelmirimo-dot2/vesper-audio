@@ -18,7 +18,7 @@ export const ArtworkImage: React.FC<ArtworkImageProps> = ({
   if (!src || failed) {
     return (
       <div
-        className={`flex items-center justify-center bg-gradient-to-br from-[#1C1C26] to-[#121218] border border-[#262632] text-violet-400/70 shrink-0 ${className}`}
+        className={`flex items-center justify-center bg-gradient-to-br from-[#1C1C26] to-[#121218] border border-[#262632] text-sky-400/70 shrink-0 ${className}`}
         aria-label={alt}
       >
         <Disc3 className="w-1/2 h-1/2" strokeWidth={1.5} />

@@ -15,7 +15,7 @@ export const PWAInstallButton: React.FC<{ compact?: boolean }> = ({
       <button
         type="button"
         onClick={() => void install()}
-        className="flex items-center justify-center gap-2 rounded-lg bg-violet-600 px-3.5 py-2 text-xs font-medium text-white hover:bg-violet-500 transition-colors whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400"
+        className="flex items-center justify-center gap-2 rounded-lg bg-sky-600 px-3.5 py-2 text-xs font-medium text-white hover:bg-sky-500 transition-colors whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
       >
         <Download className="w-3.5 h-3.5" />
         <span>{compact ? 'Install' : 'Install App'}</span>
@@ -29,9 +29,9 @@ export const PWAInstallButton: React.FC<{ compact?: boolean }> = ({
         <button
           type="button"
           onClick={() => setShowIOSGuide(true)}
-          className="flex items-center justify-center gap-2 rounded-lg border border-[#2A2A38] bg-[#15151B] px-3 py-2 text-xs font-medium text-[#F5F5F7] hover:bg-[#1C1C24] transition-colors whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400"
+          className="flex items-center justify-center gap-2 rounded-lg border border-[#2A2A38] bg-[#15151B] px-3 py-2 text-xs font-medium text-[#F5F5F7] hover:bg-[#1C1C24] transition-colors whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
         >
-          <Share className="w-3.5 h-3.5 text-violet-400" />
+          <Share className="w-3.5 h-3.5 text-sky-400" />
           <span>Install on iOS</span>
         </button>
 
@@ -67,7 +67,7 @@ export const PWAInstallButton: React.FC<{ compact?: boolean }> = ({
               <button
                 type="button"
                 onClick={() => setShowIOSGuide(false)}
-                className="mt-5 w-full rounded-lg bg-violet-600 py-2.5 text-sm font-medium text-white hover:bg-violet-500 transition-colors"
+                className="mt-5 w-full rounded-lg bg-sky-600 py-2.5 text-sm font-medium text-white hover:bg-sky-500 transition-colors"
               >
                 Got it
               </button>

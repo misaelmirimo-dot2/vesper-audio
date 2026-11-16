@@ -82,7 +82,7 @@ export const TrackDetailPage: React.FC = () => {
 
         <div className="flex-1 space-y-4 min-w-0">
           <div>
-            <p className="text-xs font-medium text-violet-400">
+            <p className="text-xs font-medium text-sky-400">
               {track.genre} · {track.isInstrumental ? 'Instrumental' : 'Vocal'}
             </p>
             <h1 className="mt-1 font-display text-2xl sm:text-3xl font-bold text-[#F5F5F7]">
@@ -116,7 +116,7 @@ export const TrackDetailPage: React.FC = () => {
                 void playTrack(track, [track, ...similar]);
                 void recordPlay(track);
               }}
-              className="inline-flex items-center gap-2 rounded-lg bg-violet-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-violet-500 transition-colors"
+              className="inline-flex items-center gap-2 rounded-lg bg-sky-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-sky-500 transition-colors"
             >
               <Play className="w-4 h-4 fill-white" />
               <span>Play Track</span>
@@ -125,11 +125,11 @@ export const TrackDetailPage: React.FC = () => {
             <button
               type="button"
               onClick={() => void toggleFavorite(track)}
-              className="inline-flex items-center gap-2 rounded-lg border border-[#2A2A38] bg-[#1A1A22] px-4 py-2.5 text-sm font-medium text-[#F5F5F7] hover:border-violet-500/40"
+              className="inline-flex items-center gap-2 rounded-lg border border-[#2A2A38] bg-[#1A1A22] px-4 py-2.5 text-sm font-medium text-[#F5F5F7] hover:border-sky-500/40"
             >
               <Heart
                 className={`w-4 h-4 ${
-                  favorited ? 'fill-violet-400 text-violet-400' : ''
+                  favorited ? 'fill-sky-400 text-sky-400' : ''
                 }`}
               />
               <span>{favorited ? 'Favorited' : 'Favorite'}</span>
@@ -144,9 +144,9 @@ export const TrackDetailPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => void handleDownload()}
-                className="inline-flex items-center gap-2 rounded-lg border border-[#2A2A38] bg-[#1A1A22] px-4 py-2.5 text-sm font-medium text-[#F5F5F7] hover:border-violet-500/40"
+                className="inline-flex items-center gap-2 rounded-lg border border-[#2A2A38] bg-[#1A1A22] px-4 py-2.5 text-sm font-medium text-[#F5F5F7] hover:border-sky-500/40"
               >
-                <Download className="w-4 h-4 text-violet-400" />
+                <Download className="w-4 h-4 text-sky-400" />
                 <span>Download Offline</span>
               </button>
             ) : (
@@ -158,7 +158,7 @@ export const TrackDetailPage: React.FC = () => {
           </div>
 
           {dlMessage && (
-            <p className="text-xs text-violet-300">{dlMessage}</p>
+            <p className="text-xs text-sky-300">{dlMessage}</p>
           )}
         </div>
       </section>
@@ -166,7 +166,7 @@ export const TrackDetailPage: React.FC = () => {
       {/* Licensing & Attribution Verification Panel */}
       <section className="rounded-2xl border border-[#22222E] bg-[#15151B] p-6 space-y-4">
         <div className="flex items-center gap-2">
-          <ShieldCheck className="w-5 h-5 text-violet-400" />
+          <ShieldCheck className="w-5 h-5 text-sky-400" />
           <h2 className="font-display text-lg font-semibold text-[#F5F5F7]">
             Licensing &amp; Attribution Verification
           </h2>
@@ -220,7 +220,7 @@ export const TrackDetailPage: React.FC = () => {
             href={track.originalTrackUrl}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-1 text-violet-400 hover:text-violet-300 underline underline-offset-4"
+            className="inline-flex items-center gap-1 text-sky-400 hover:text-sky-300 underline underline-offset-4"
           >
             Original Jamendo Track Page
             <ExternalLink className="w-3 h-3" />
@@ -229,7 +229,7 @@ export const TrackDetailPage: React.FC = () => {
             href={track.licenseUrl}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-1 text-[#F5F5F7] hover:text-violet-300 underline underline-offset-4"
+            className="inline-flex items-center gap-1 text-[#F5F5F7] hover:text-sky-300 underline underline-offset-4"
           >
             Official Licence Deed
             <ExternalLink className="w-3 h-3" />
@@ -303,7 +303,7 @@ export const ArtistDetailPage: React.FC = () => {
           className="w-36 h-36 rounded-full border border-[#262632]"
         />
         <div className="flex-1 text-center sm:text-left space-y-3">
-          <p className="text-xs font-medium text-violet-400">
+          <p className="text-xs font-medium text-sky-400">
             {data.artist.genre || 'Independent Artist'}
           </p>
           <h1 className="font-display text-3xl font-bold text-[#F5F5F7]">
@@ -326,11 +326,11 @@ export const ArtistDetailPage: React.FC = () => {
               }
               className={`inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-xs font-medium transition-colors ${
                 saved
-                  ? 'border-violet-500 bg-violet-500/15 text-violet-300'
+                  ? 'border-sky-500 bg-sky-500/15 text-sky-300'
                   : 'border-[#2A2A38] bg-[#1A1A22] text-[#F5F5F7]'
               }`}
             >
-              <Bookmark className={`w-3.5 h-3.5 ${saved ? 'fill-violet-400' : ''}`} />
+              <Bookmark className={`w-3.5 h-3.5 ${saved ? 'fill-sky-400' : ''}`} />
               <span>{saved ? 'Saved in Library' : 'Save Artist'}</span>
             </button>
             <a
@@ -436,7 +436,7 @@ export const AlbumDetailPage: React.FC = () => {
           className="w-44 h-44 rounded-xl mx-auto sm:mx-0"
         />
         <div className="flex-1 space-y-3">
-          <p className="text-xs font-medium text-violet-400">
+          <p className="text-xs font-medium text-sky-400">
             Album · {data.album.releaseDate || 'Independent Release'}
           </p>
           <h1 className="font-display text-3xl font-bold text-[#F5F5F7]">
@@ -461,7 +461,7 @@ export const AlbumDetailPage: React.FC = () => {
                   void playTrack(data.tracks[0], data.tracks);
                   void recordPlay(data.tracks[0]);
                 }}
-                className="inline-flex items-center gap-2 rounded-lg bg-violet-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-violet-500"
+                className="inline-flex items-center gap-2 rounded-lg bg-sky-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-sky-500"
               >
                 <Play className="w-4 h-4 fill-white" />
                 <span>Play Album</span>
@@ -480,11 +480,11 @@ export const AlbumDetailPage: React.FC = () => {
               }
               className={`inline-flex items-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium transition-colors ${
                 saved
-                  ? 'border-violet-500 bg-violet-500/15 text-violet-300'
+                  ? 'border-sky-500 bg-sky-500/15 text-sky-300'
                   : 'border-[#2A2A38] bg-[#1A1A22] text-[#F5F5F7]'
               }`}
             >
-              <Bookmark className={`w-4 h-4 ${saved ? 'fill-violet-400' : ''}`} />
+              <Bookmark className={`w-4 h-4 ${saved ? 'fill-sky-400' : ''}`} />
               <span>{saved ? 'Saved Album' : 'Save Album'}</span>
             </button>
           </div>
