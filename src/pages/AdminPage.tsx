@@ -56,19 +56,19 @@ export const AdminPage: React.FC = () => {
   });
 
   if (isLoading) {
-    return <div className="h-64 rounded-2xl bg-[#15151B] animate-pulse" />;
+    return <div className="h-64 rounded-2xl bg-[#181818] animate-pulse" />;
   }
 
   if (isError || !data) {
     return (
-      <div className="rounded-xl border border-rose-500/30 bg-[#1B1317] p-6 flex items-center justify-between">
+      <div className="rounded-xl bg-[#2A181B] border border-rose-500/30 p-6 flex items-center justify-between">
         <span className="text-sm text-rose-200">
-          Failed to load administration telemetry.
+          Failed to load administration overview.
         </span>
         <button
           type="button"
           onClick={() => void refetch()}
-          className="rounded-lg border border-rose-400/30 px-3 py-1.5 text-xs text-rose-100"
+          className="rounded-full bg-white px-4 py-1.5 text-xs font-bold text-black"
         >
           Retry
         </button>
@@ -80,11 +80,11 @@ export const AdminPage: React.FC = () => {
     <div className="space-y-8">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-xs font-medium text-sky-400">
+          <div className="flex items-center gap-2 text-xs font-bold text-[#1ED760]">
             <Shield className="w-4 h-4" />
             <span>Platform Administration</span>
           </div>
-          <h1 className="mt-1 font-display text-2xl font-bold text-[#F5F5F7]">
+          <h1 className="mt-1 font-display text-2xl sm:text-3xl font-extrabold text-white">
             Licensing, Cache &amp; API Governance
           </h1>
         </div>
@@ -93,7 +93,7 @@ export const AdminPage: React.FC = () => {
           href="/api/docs"
           target="_blank"
           rel="noreferrer"
-          className="inline-flex items-center gap-1.5 rounded-lg border border-[#2A2A38] bg-[#15151B] px-3.5 py-2 text-xs font-medium text-[#F5F5F7] hover:border-sky-500/40"
+          className="inline-flex items-center gap-1.5 rounded-full bg-[#242424] px-4 py-2 text-xs font-semibold text-white hover:bg-[#303030]"
         >
           OpenAPI Specification
           <ExternalLink className="w-3.5 h-3.5" />
@@ -110,10 +110,10 @@ export const AdminPage: React.FC = () => {
         ].map(([label, val]) => (
           <div
             key={String(label)}
-            className="rounded-xl border border-[#22222E] bg-[#15151B] p-4"
+            className="rounded-xl bg-[#181818] p-4"
           >
-            <p className="text-xs text-[#9494A3]">{label}</p>
-            <p className="mt-1 text-2xl font-bold font-mono-tabular text-[#F5F5F7]">
+            <p className="text-xs text-[#B3B3B3]">{label}</p>
+            <p className="mt-1 text-2xl font-extrabold font-mono-tabular text-white">
               {val}
             </p>
           </div>
@@ -121,13 +121,13 @@ export const AdminPage: React.FC = () => {
       </div>
 
       {/* Jamendo Integration & Policy Switches */}
-      <section className="rounded-xl border border-[#22222E] bg-[#15151B] divide-y divide-[#22222E]">
+      <section className="rounded-2xl bg-[#181818] divide-y divide-white/[0.06]">
         <div className="p-5 flex flex-wrap items-center justify-between gap-4">
           <div>
-            <p className="text-sm font-medium text-[#F5F5F7]">
+            <p className="text-sm font-bold text-white">
               Jamendo API v3.0 Mode
             </p>
-            <p className="text-xs text-[#9494A3]">
+            <p className="text-xs text-[#B3B3B3]">
               {data.jamendoCache.liveConfigured
                 ? `Connected to ${data.jamendoCache.baseUrl} (${data.jamendoCache.entries} cached responses)`
                 : 'Development catalog fallback active — configure JAMENDO_CLIENT_ID in server environment for live Jamendo queries.'}
@@ -136,7 +136,7 @@ export const AdminPage: React.FC = () => {
           <button
             type="button"
             onClick={() => updateMutation.mutate({ clearCache: true })}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-[#2A2A38] px-3.5 py-2 text-xs font-medium text-[#F5F5F7] hover:bg-[#1C1C24]"
+            className="inline-flex items-center gap-1.5 rounded-full bg-[#242424] px-4 py-2 text-xs font-semibold text-white hover:bg-[#303030]"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             Purge API Cache
@@ -145,10 +145,10 @@ export const AdminPage: React.FC = () => {
 
         <div className="p-5 flex items-center justify-between gap-4">
           <div>
-            <p className="text-sm font-medium text-[#F5F5F7]">
+            <p className="text-sm font-bold text-white">
               Global Offline Downloads
             </p>
-            <p className="text-xs text-[#9494A3]">
+            <p className="text-xs text-[#B3B3B3]">
               Administrative kill-switch. Disabling blocks all new download
               authorizations across the platform.
             </p>
@@ -164,14 +164,14 @@ export const AdminPage: React.FC = () => {
                   !data.settings.downloadsEnabledGlobally,
               })
             }
-            className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors ${
+            className={`relative inline-flex h-7 w-12 shrink-0 items-center rounded-full transition-colors ${
               data.settings.downloadsEnabledGlobally
-                ? 'bg-sky-600'
-                : 'bg-[#2A2A38]'
+                ? 'bg-[#1ED760]'
+                : 'bg-[#3E3E3E]'
             }`}
           >
             <span
-              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+              className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform ${
                 data.settings.downloadsEnabledGlobally
                   ? 'translate-x-6'
                   : 'translate-x-1'
@@ -182,10 +182,10 @@ export const AdminPage: React.FC = () => {
 
         <div className="p-5 flex items-center justify-between gap-4">
           <div>
-            <p className="text-sm font-medium text-[#F5F5F7]">
+            <p className="text-sm font-bold text-white">
               Enforce Platform Commercial Compliance
             </p>
-            <p className="text-xs text-[#9494A3]">
+            <p className="text-xs text-[#B3B3B3]">
               Require commercial-compatible Creative Commons licences (CC BY /
               CC BY-SA / CC BY-ND) for all downloads.
             </p>
@@ -200,14 +200,14 @@ export const AdminPage: React.FC = () => {
                 commercialModeEnforced: !data.settings.commercialModeEnforced,
               })
             }
-            className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors ${
+            className={`relative inline-flex h-7 w-12 shrink-0 items-center rounded-full transition-colors ${
               data.settings.commercialModeEnforced
-                ? 'bg-sky-600'
-                : 'bg-[#2A2A38]'
+                ? 'bg-[#1ED760]'
+                : 'bg-[#3E3E3E]'
             }`}
           >
             <span
-              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+              className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform ${
                 data.settings.commercialModeEnforced
                   ? 'translate-x-6'
                   : 'translate-x-1'
@@ -218,10 +218,10 @@ export const AdminPage: React.FC = () => {
 
         <div className="p-5 flex flex-wrap items-center justify-between gap-4">
           <div>
-            <p className="text-sm font-medium text-[#F5F5F7]">
+            <p className="text-sm font-bold text-white">
               API Response Cache TTL
             </p>
-            <p className="text-xs text-[#9494A3]">
+            <p className="text-xs text-[#B3B3B3]">
               Controls how long Jamendo search and track metadata responses are
               cached in memory.
             </p>
@@ -234,7 +234,7 @@ export const AdminPage: React.FC = () => {
                 apiCacheTtlSeconds: Number(e.target.value),
               })
             }
-            className="rounded-lg border border-[#2A2A38] bg-[#0E0E12] px-3 py-2 text-xs text-[#F5F5F7]"
+            className="rounded-lg bg-[#242424] border border-white/10 px-3 py-2 text-xs text-white focus:border-[#1ED760] focus:outline-none"
           >
             <option value={60}>60 seconds</option>
             <option value={300}>5 minutes</option>
@@ -246,43 +246,42 @@ export const AdminPage: React.FC = () => {
 
       {/* Audit Logs */}
       <section className="space-y-3">
-        <h2 className="text-base font-semibold text-[#F5F5F7]">
+        <h2 className="font-display text-lg font-bold text-white">
           Recent API &amp; Licence Verification Logs
         </h2>
-        <div className="rounded-xl border border-[#22222E] bg-[#15151B] overflow-x-auto">
+        <div className="rounded-xl bg-[#181818] overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="border-b border-[#22222E] text-[#9494A3]">
+            <thead className="border-b border-white/10 text-[#B3B3B3]">
               <tr>
-                <th className="px-4 py-3 font-medium">Event</th>
-                <th className="px-4 py-3 font-medium">Endpoint</th>
-                <th className="px-4 py-3 font-medium">Status</th>
-                <th className="px-4 py-3 font-medium">Detail</th>
+                <th className="px-4 py-3 font-semibold">Event</th>
+                <th className="px-4 py-3 font-semibold">Endpoint</th>
+                <th className="px-4 py-3 font-semibold">Status</th>
+                <th className="px-4 py-3 font-semibold">Detail</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#1E1E28]">
+            <tbody className="divide-y divide-white/[0.06]">
               {data.logs.length === 0 ? (
                 <tr>
                   <td
                     colSpan={4}
-                    className="px-4 py-6 text-center text-[#9494A3]"
+                    className="px-4 py-6 text-center text-[#B3B3B3]"
                   >
-                    No verification events logged yet. Trigger a search or
-                    download authorization check to see entries here.
+                    No verification events logged yet.
                   </td>
                 </tr>
               ) : (
                 data.logs.map((log) => (
-                  <tr key={log.id} className="hover:bg-[#191922]">
-                    <td className="px-4 py-2.5 font-medium text-[#F5F5F7] whitespace-nowrap">
+                  <tr key={log.id} className="hover:bg-white/[0.04]">
+                    <td className="px-4 py-2.5 font-semibold text-white whitespace-nowrap">
                       {log.eventType}
                     </td>
-                    <td className="px-4 py-2.5 font-mono-tabular text-[#9494A3] whitespace-nowrap">
+                    <td className="px-4 py-2.5 font-mono-tabular text-[#B3B3B3] whitespace-nowrap">
                       {log.endpoint}
                     </td>
-                    <td className="px-4 py-2.5 font-mono-tabular text-[#9494A3]">
+                    <td className="px-4 py-2.5 font-mono-tabular text-[#B3B3B3]">
                       {log.statusCode ?? '—'}
                     </td>
-                    <td className="px-4 py-2.5 text-[#9494A3] max-w-md truncate">
+                    <td className="px-4 py-2.5 text-[#B3B3B3] max-w-md truncate">
                       {log.detail}
                     </td>
                   </tr>

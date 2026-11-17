@@ -57,32 +57,31 @@ export const SettingsPage: React.FC = () => {
   return (
     <div className="space-y-8 max-w-3xl">
       <div>
-        <h1 className="font-display text-2xl font-bold text-[#F5F5F7]">
-          Account &amp; Settings
+        <h1 className="font-display text-2xl sm:text-3xl font-extrabold text-white">
+          Settings
         </h1>
-        <p className="mt-1 text-sm text-[#9494A3]">
-          Manage your profile, Creative Commons licensing mode, and offline PWA
-          preferences.
+        <p className="mt-1 text-sm text-[#B3B3B3]">
+          Manage your account, licensing preferences, and offline PWA mode.
         </p>
       </div>
 
       {/* Account Card */}
-      <section className="rounded-xl border border-[#22222E] bg-[#15151B] p-6 space-y-5">
+      <section className="rounded-2xl bg-[#181818] p-5 sm:p-6 space-y-5">
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-full bg-[#1E1E28] border border-[#2A2A38] flex items-center justify-center">
-              <User className="w-5 h-5 text-sky-400" />
+          <div className="flex items-center gap-3.5">
+            <div className="w-12 h-12 rounded-full bg-[#242424] flex items-center justify-center">
+              <User className="w-5 h-5 text-[#1ED760]" />
             </div>
             <div>
-              <h2 className="text-base font-semibold text-[#F5F5F7]">
+              <h2 className="text-base font-bold text-white">
                 {firebaseUser
                   ? profile?.username || firebaseUser.displayName || 'Listener'
                   : 'Local Offline Profile'}
               </h2>
-              <p className="text-xs text-[#9494A3]">
+              <p className="text-xs text-[#B3B3B3]">
                 {firebaseUser
                   ? firebaseUser.email
-                  : 'Sign in with Google to sync playlists, favorites, and download records to PostgreSQL.'}
+                  : 'Log in with Google to sync playlists, favorites, and offline history.'}
               </p>
             </div>
           </div>
@@ -91,19 +90,19 @@ export const SettingsPage: React.FC = () => {
             <button
               type="button"
               onClick={() => void signOut()}
-              className="inline-flex items-center gap-2 rounded-lg border border-[#2A2A38] px-4 py-2 text-xs font-medium text-[#F5F5F7] hover:bg-[#1C1C24]"
+              className="inline-flex items-center gap-2 rounded-full bg-[#242424] px-5 py-2.5 text-xs font-bold text-white hover:bg-[#303030] min-h-[40px]"
             >
               <LogOut className="w-3.5 h-3.5" />
-              Sign out
+              Log out
             </button>
           ) : (
             <button
               type="button"
               onClick={() => void signInWithGoogle()}
-              className="inline-flex items-center gap-2 rounded-lg bg-sky-600 px-4 py-2 text-xs font-medium text-white hover:bg-sky-500"
+              className="inline-flex items-center gap-2 rounded-full bg-[#1ED760] px-5 py-2.5 text-xs font-bold text-black hover:bg-[#1FDF64] min-h-[40px]"
             >
               <LogIn className="w-3.5 h-3.5" />
-              Sign in with Google
+              Log in with Google
             </button>
           )}
         </div>
@@ -115,12 +114,12 @@ export const SettingsPage: React.FC = () => {
         {firebaseUser && (
           <form
             onSubmit={handleSubmit(onSaveProfile)}
-            className="border-t border-[#22222E] pt-5 space-y-4"
+            className="border-t border-white/10 pt-5 space-y-4"
           >
             <div>
               <label
                 htmlFor="profile-username"
-                className="block text-xs text-[#9494A3] mb-1.5"
+                className="block text-xs font-semibold text-[#B3B3B3] mb-1.5"
               >
                 Display Name
               </label>
@@ -128,7 +127,7 @@ export const SettingsPage: React.FC = () => {
                 id="profile-username"
                 type="text"
                 {...register('username')}
-                className="w-full rounded-lg border border-[#2A2A38] bg-[#0E0E12] px-3.5 py-2 text-sm text-[#F5F5F7] focus:border-sky-500 focus:outline-none"
+                className="w-full rounded-lg bg-[#242424] border border-white/10 px-3.5 py-2.5 text-sm text-white focus:border-[#1ED760] focus:outline-none min-h-[44px]"
               />
               {errors.username && (
                 <p className="mt-1 text-xs text-rose-400">
@@ -140,7 +139,7 @@ export const SettingsPage: React.FC = () => {
             <div>
               <label
                 htmlFor="profile-bio"
-                className="block text-xs text-[#9494A3] mb-1.5"
+                className="block text-xs font-semibold text-[#B3B3B3] mb-1.5"
               >
                 Listener Bio
               </label>
@@ -148,7 +147,7 @@ export const SettingsPage: React.FC = () => {
                 id="profile-bio"
                 rows={2}
                 {...register('bio')}
-                className="w-full rounded-lg border border-[#2A2A38] bg-[#0E0E12] px-3.5 py-2 text-sm text-[#F5F5F7] focus:border-sky-500 focus:outline-none"
+                className="w-full rounded-lg bg-[#242424] border border-white/10 px-3.5 py-2.5 text-sm text-white focus:border-[#1ED760] focus:outline-none"
               />
             </div>
 
@@ -156,13 +155,13 @@ export const SettingsPage: React.FC = () => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="rounded-lg bg-sky-600 px-4 py-2 text-xs font-medium text-white hover:bg-sky-500"
+                className="rounded-full bg-[#1ED760] px-5 py-2.5 text-xs font-bold text-black hover:bg-[#1FDF64] min-h-[40px]"
               >
                 Save Profile
               </button>
               {savedNotice && (
-                <span className="text-xs text-emerald-400">
-                  Profile saved to PostgreSQL.
+                <span className="text-xs font-medium text-[#1ED760]">
+                  Profile saved.
                 </span>
               )}
             </div>
@@ -171,14 +170,14 @@ export const SettingsPage: React.FC = () => {
       </section>
 
       {/* Licensing & Offline Controls */}
-      <section className="rounded-xl border border-[#22222E] bg-[#15151B] divide-y divide-[#22222E]">
+      <section className="rounded-2xl bg-[#181818] divide-y divide-white/[0.06]">
         <div className="flex items-center justify-between gap-4 p-5">
           <div className="space-y-1">
-            <div className="flex items-center gap-2 text-sm font-medium text-[#F5F5F7]">
-              <ShieldAlert className="w-4 h-4 text-sky-400" />
+            <div className="flex items-center gap-2 text-sm font-bold text-white">
+              <ShieldAlert className="w-4 h-4 text-[#1ED760]" />
               <span>Commercial Use Enforcement Mode</span>
             </div>
-            <p className="text-xs text-[#9494A3]">
+            <p className="text-xs text-[#B3B3B3]">
               When enabled, offline downloads for Non-Commercial licences (CC
               BY-NC, CC BY-NC-SA, CC BY-NC-ND) are strictly blocked.
             </p>
@@ -189,12 +188,12 @@ export const SettingsPage: React.FC = () => {
             aria-checked={commercialUseMode}
             aria-label="Toggle Commercial Use Enforcement Mode"
             onClick={() => void setCommercialUseMode(!commercialUseMode)}
-            className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors ${
-              commercialUseMode ? 'bg-sky-600' : 'bg-[#2A2A38]'
+            className={`relative inline-flex h-7 w-12 shrink-0 items-center rounded-full transition-colors ${
+              commercialUseMode ? 'bg-[#1ED760]' : 'bg-[#3E3E3E]'
             }`}
           >
             <span
-              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+              className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform ${
                 commercialUseMode ? 'translate-x-6' : 'translate-x-1'
               }`}
             />
@@ -203,11 +202,11 @@ export const SettingsPage: React.FC = () => {
 
         <div className="flex items-center justify-between gap-4 p-5">
           <div className="space-y-1">
-            <div className="flex items-center gap-2 text-sm font-medium text-[#F5F5F7]">
-              <WifiOff className="w-4 h-4 text-amber-400" />
+            <div className="flex items-center gap-2 text-sm font-bold text-white">
+              <WifiOff className="w-4 h-4 text-[#1ED760]" />
               <span>Offline Mode Preview</span>
             </div>
-            <p className="text-xs text-[#9494A3]">
+            <p className="text-xs text-[#B3B3B3]">
               Simulate disconnecting from the network to verify offline Cache
               Storage playback and saved playlists.
             </p>
@@ -218,12 +217,12 @@ export const SettingsPage: React.FC = () => {
             aria-checked={simulatedOffline}
             aria-label="Toggle Offline Mode Preview"
             onClick={() => void setSimulatedOffline(!simulatedOffline)}
-            className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors ${
-              simulatedOffline ? 'bg-amber-500' : 'bg-[#2A2A38]'
+            className={`relative inline-flex h-7 w-12 shrink-0 items-center rounded-full transition-colors ${
+              simulatedOffline ? 'bg-[#1ED760]' : 'bg-[#3E3E3E]'
             }`}
           >
             <span
-              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+              className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform ${
                 simulatedOffline ? 'translate-x-6' : 'translate-x-1'
               }`}
             />
@@ -232,10 +231,10 @@ export const SettingsPage: React.FC = () => {
 
         <div className="flex items-center justify-between gap-4 p-5">
           <div>
-            <p className="text-sm font-medium text-[#F5F5F7]">
+            <p className="text-sm font-bold text-white">
               Progressive Web App Installation
             </p>
-            <p className="text-xs text-[#9494A3]">
+            <p className="text-xs text-[#B3B3B3]">
               Install Vesper Audio for standalone windowing and iOS/Android
               offline shell caching.
             </p>

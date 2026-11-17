@@ -26,8 +26,14 @@ import { AddToPlaylistModal } from '../components/AddToPlaylistModal.tsx';
 
 export const TrackDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const { commercialUseMode, isFavorite, toggleFavorite, startDownload, getDownloadEntry, recordPlay } =
-    useLibrary();
+  const {
+    commercialUseMode,
+    isFavorite,
+    toggleFavorite,
+    startDownload,
+    getDownloadEntry,
+    recordPlay,
+  } = useLibrary();
   const { playTrack } = usePlayerStore();
   const [modalTrack, setModalTrack] = useState<NormalizedTrack | null>(null);
   const [dlMessage, setDlMessage] = useState<string | null>(null);
@@ -42,13 +48,13 @@ export const TrackDetailPage: React.FC = () => {
   });
 
   if (isLoading) {
-    return <div className="h-64 rounded-2xl bg-[#15151B] animate-pulse" />;
+    return <div className="h-64 rounded-2xl bg-[#181818] animate-pulse" />;
   }
 
   if (isError || !data) {
     return (
-      <div className="rounded-xl border border-[#262632] bg-[#15151B] p-8 text-center">
-        <p className="text-sm text-[#9494A3]">Track details could not be loaded.</p>
+      <div className="rounded-2xl bg-[#181818] p-8 text-center">
+        <p className="text-sm text-[#B3B3B3]">Track details could not be loaded.</p>
       </div>
     );
   }
@@ -73,25 +79,26 @@ export const TrackDetailPage: React.FC = () => {
 
   return (
     <div className="space-y-8">
-      <section className="flex flex-col md:flex-row gap-8 rounded-2xl border border-[#22222E] bg-[#15151B] p-6 sm:p-8">
+      {/* Spotify Gradient Track Hero */}
+      <section className="-mx-4 -mt-4 sm:-mx-6 sm:-mt-6 lg:-mx-8 lg:-mt-6 px-4 pt-6 pb-6 sm:px-6 lg:px-8 bg-gradient-to-b from-[#2A2A2A] via-[#1B1B1B] to-[#121212] flex flex-col md:flex-row items-center md:items-end gap-6">
         <ArtworkImage
           src={track.artworkUrl}
           alt={track.title}
-          className="w-48 h-48 sm:w-56 sm:h-56 rounded-xl mx-auto md:mx-0"
+          className="w-48 h-48 sm:w-56 sm:h-56 rounded-lg mx-auto md:mx-0 shadow-[0_20px_50px_rgba(0,0,0,0.65)]"
         />
 
-        <div className="flex-1 space-y-4 min-w-0">
+        <div className="flex-1 text-center md:text-left space-y-3 min-w-0">
           <div>
-            <p className="text-xs font-medium text-sky-400">
+            <p className="text-xs font-bold uppercase tracking-wider text-[#1ED760]">
               {track.genre} · {track.isInstrumental ? 'Instrumental' : 'Vocal'}
             </p>
-            <h1 className="mt-1 font-display text-2xl sm:text-3xl font-bold text-[#F5F5F7]">
+            <h1 className="mt-1 font-display text-2xl sm:text-4xl font-extrabold text-white">
               {track.title}
             </h1>
-            <p className="mt-1.5 text-sm text-[#9494A3]">
+            <p className="mt-2 text-sm text-[#B3B3B3]">
               <Link
                 to={`/artist/${track.artistId}`}
-                className="text-[#F5F5F7] hover:underline underline-offset-4"
+                className="text-white font-semibold hover:underline underline-offset-4"
               >
                 {track.artistName}
               </Link>
@@ -109,95 +116,95 @@ export const TrackDetailPage: React.FC = () => {
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 pt-1">
             <button
               type="button"
               onClick={() => {
                 void playTrack(track, [track, ...similar]);
                 void recordPlay(track);
               }}
-              className="inline-flex items-center gap-2 rounded-lg bg-sky-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-sky-500 transition-colors"
+              aria-label={`Play ${track.title}`}
+              className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-[#1ED760] text-black hover:bg-[#1FDF64] hover:scale-105 active:scale-95 transition-all shadow-xl"
             >
-              <Play className="w-4 h-4 fill-white" />
-              <span>Play Track</span>
+              <Play className="w-6 h-6 fill-black ml-0.5" />
             </button>
 
             <button
               type="button"
               onClick={() => void toggleFavorite(track)}
-              className="inline-flex items-center gap-2 rounded-lg border border-[#2A2A38] bg-[#1A1A22] px-4 py-2.5 text-sm font-medium text-[#F5F5F7] hover:border-sky-500/40"
+              className="inline-flex items-center gap-2 rounded-full bg-[#242424] px-4 py-2.5 text-xs font-semibold text-white hover:bg-[#303030] min-h-[42px]"
             >
               <Heart
                 className={`w-4 h-4 ${
-                  favorited ? 'fill-sky-400 text-sky-400' : ''
+                  favorited ? 'fill-[#1ED760] text-[#1ED760]' : ''
                 }`}
               />
-              <span>{favorited ? 'Favorited' : 'Favorite'}</span>
+              <span>{favorited ? 'Liked' : 'Save'}</span>
             </button>
 
             {isDownloaded ? (
-              <span className="inline-flex items-center gap-2 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-4 py-2.5 text-sm font-medium text-emerald-300">
+              <span className="inline-flex items-center gap-2 rounded-full bg-[#1ED760]/15 px-4 py-2.5 text-xs font-bold text-[#1ED760]">
                 <CheckCircle2 className="w-4 h-4" />
-                Available Offline
+                Downloaded
               </span>
             ) : permitted ? (
               <button
                 type="button"
                 onClick={() => void handleDownload()}
-                className="inline-flex items-center gap-2 rounded-lg border border-[#2A2A38] bg-[#1A1A22] px-4 py-2.5 text-sm font-medium text-[#F5F5F7] hover:border-sky-500/40"
+                className="inline-flex items-center gap-2 rounded-full bg-[#242424] px-4 py-2.5 text-xs font-semibold text-white hover:bg-[#303030] min-h-[42px]"
               >
-                <Download className="w-4 h-4 text-sky-400" />
-                <span>Download Offline</span>
+                <Download className="w-4 h-4 text-[#1ED760]" />
+                <span>Download</span>
               </button>
             ) : (
-              <span className="inline-flex items-center gap-2 rounded-lg border border-[#262632] bg-[#121217] px-4 py-2.5 text-xs text-[#9494A3]">
+              <span className="inline-flex items-center gap-2 rounded-full bg-[#242424] px-4 py-2.5 text-xs text-[#B3B3B3]">
                 <Lock className="w-3.5 h-3.5" />
-                Download Restricted
+                Restricted
               </span>
             )}
           </div>
 
           {dlMessage && (
-            <p className="text-xs text-sky-300">{dlMessage}</p>
+            <p className="text-xs font-medium text-[#1ED760]">{dlMessage}</p>
           )}
         </div>
       </section>
 
       {/* Licensing & Attribution Verification Panel */}
-      <section className="rounded-2xl border border-[#22222E] bg-[#15151B] p-6 space-y-4">
+      <section className="rounded-2xl bg-[#181818] p-5 sm:p-6 space-y-4">
         <div className="flex items-center gap-2">
-          <ShieldCheck className="w-5 h-5 text-sky-400" />
-          <h2 className="font-display text-lg font-semibold text-[#F5F5F7]">
+          <ShieldCheck className="w-5 h-5 text-[#1ED760]" />
+          <h2 className="font-display text-lg font-bold text-white">
             Licensing &amp; Attribution Verification
           </h2>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
-          <div className="rounded-lg border border-[#22222E] bg-[#111116] p-3.5">
-            <p className="text-[#9494A3]">Licence Type</p>
-            <p className="mt-1 text-sm font-semibold text-[#F5F5F7]">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+          <div className="rounded-xl bg-[#242424] p-3.5">
+            <p className="text-[#B3B3B3]">Licence Type</p>
+            <p className="mt-1 text-sm font-bold text-white">
               {track.licenseType}
             </p>
           </div>
-          <div className="rounded-lg border border-[#22222E] bg-[#111116] p-3.5">
-            <p className="text-[#9494A3]">Download Permission</p>
-            <p className="mt-1 text-sm font-semibold text-[#F5F5F7]">
+          <div className="rounded-xl bg-[#242424] p-3.5">
+            <p className="text-[#B3B3B3]">Download Permission</p>
+            <p className="mt-1 text-sm font-bold text-white">
               {track.audiodownloadAllowed
                 ? 'Permitted by Artist'
                 : 'Streaming Only'}
             </p>
           </div>
-          <div className="rounded-lg border border-[#22222E] bg-[#111116] p-3.5">
-            <p className="text-[#9494A3]">Commercial Use</p>
-            <p className="mt-1 text-sm font-semibold text-[#F5F5F7]">
+          <div className="rounded-xl bg-[#242424] p-3.5">
+            <p className="text-[#B3B3B3]">Commercial Use</p>
+            <p className="mt-1 text-sm font-bold text-white">
               {track.licenseEvaluation.commercialUsePermitted
                 ? 'Allowed with Attribution'
                 : 'Non-Commercial Only'}
             </p>
           </div>
-          <div className="rounded-lg border border-[#22222E] bg-[#111116] p-3.5">
-            <p className="text-[#9494A3]">Derivatives / Transcoding</p>
-            <p className="mt-1 text-sm font-semibold text-[#F5F5F7]">
+          <div className="rounded-xl bg-[#242424] p-3.5">
+            <p className="text-[#B3B3B3]">Derivatives / Transcoding</p>
+            <p className="mt-1 text-sm font-bold text-white">
               {track.licenseEvaluation.derivativesPermitted
                 ? 'Permitted'
                 : 'No Derivatives'}
@@ -211,16 +218,16 @@ export const TrackDetailPage: React.FC = () => {
           </p>
         )}
 
-        <div className="flex flex-wrap items-center gap-6 pt-2 text-xs text-[#9494A3] border-t border-[#22222E]">
+        <div className="flex flex-wrap items-center gap-6 pt-3 text-xs text-[#B3B3B3] border-t border-white/10">
           <span>
-            Artist Credit: <strong className="text-[#F5F5F7]">{track.artistName}</strong>
+            Artist Credit: <strong className="text-white">{track.artistName}</strong>
           </span>
           <span>Source: Jamendo Music API v3.0</span>
           <a
             href={track.originalTrackUrl}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-1 text-sky-400 hover:text-sky-300 underline underline-offset-4"
+            className="inline-flex items-center gap-1 text-[#1ED760] hover:underline underline-offset-4 font-semibold"
           >
             Original Jamendo Track Page
             <ExternalLink className="w-3 h-3" />
@@ -229,7 +236,7 @@ export const TrackDetailPage: React.FC = () => {
             href={track.licenseUrl}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-1 text-[#F5F5F7] hover:text-sky-300 underline underline-offset-4"
+            className="inline-flex items-center gap-1 text-white hover:text-[#1ED760] underline underline-offset-4"
           >
             Official Licence Deed
             <ExternalLink className="w-3 h-3" />
@@ -239,10 +246,10 @@ export const TrackDetailPage: React.FC = () => {
 
       {similar.length > 0 && (
         <section>
-          <h2 className="font-display text-lg font-semibold text-[#F5F5F7] mb-3">
-            Similar Tracks
+          <h2 className="font-display text-lg font-bold text-white mb-3">
+            Recommended Tracks
           </h2>
-          <div className="rounded-xl border border-[#22222E] bg-[#15151B] p-2">
+          <div className="rounded-xl bg-[#181818]/60 p-1 sm:p-2">
             {similar.map((t, idx) => (
               <TrackRow
                 key={t.id}
@@ -282,11 +289,11 @@ export const ArtistDetailPage: React.FC = () => {
   });
 
   if (isLoading) {
-    return <div className="h-64 rounded-2xl bg-[#15151B] animate-pulse" />;
+    return <div className="h-64 rounded-2xl bg-[#181818] animate-pulse" />;
   }
   if (isError || !data) {
     return (
-      <div className="rounded-xl border border-[#262632] bg-[#15151B] p-8 text-center text-sm text-[#9494A3]">
+      <div className="rounded-2xl bg-[#181818] p-8 text-center text-sm text-[#B3B3B3]">
         Artist details unavailable.
       </div>
     );
@@ -296,21 +303,21 @@ export const ArtistDetailPage: React.FC = () => {
 
   return (
     <div className="space-y-8">
-      <section className="flex flex-col sm:flex-row items-center sm:items-start gap-6 rounded-2xl border border-[#22222E] bg-[#15151B] p-6 sm:p-8">
+      <section className="-mx-4 -mt-4 sm:-mx-6 sm:-mt-6 lg:-mx-8 lg:-mt-6 px-4 pt-6 pb-6 sm:px-6 lg:px-8 bg-gradient-to-b from-[#2A2A2A] via-[#1B1B1B] to-[#121212] flex flex-col sm:flex-row items-center sm:items-end gap-6">
         <ArtworkImage
           src={data.artist.imageUrl}
           alt={data.artist.name}
-          className="w-36 h-36 rounded-full border border-[#262632]"
+          className="w-36 h-36 sm:w-44 sm:h-44 rounded-full shadow-2xl"
         />
         <div className="flex-1 text-center sm:text-left space-y-3">
-          <p className="text-xs font-medium text-sky-400">
+          <p className="text-xs font-bold uppercase tracking-wider text-[#1ED760]">
             {data.artist.genre || 'Independent Artist'}
           </p>
-          <h1 className="font-display text-3xl font-bold text-[#F5F5F7]">
+          <h1 className="font-display text-3xl sm:text-4xl font-extrabold text-white">
             {data.artist.name}
           </h1>
           {data.artist.bio && (
-            <p className="text-sm text-[#9494A3] max-w-2xl">{data.artist.bio}</p>
+            <p className="text-sm text-[#B3B3B3] max-w-2xl">{data.artist.bio}</p>
           )}
           <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 pt-1">
             <button
@@ -324,20 +331,20 @@ export const ArtistDetailPage: React.FC = () => {
                   artworkUrl: data.artist.imageUrl,
                 })
               }
-              className={`inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-xs font-medium transition-colors ${
+              className={`inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-xs font-bold transition-colors min-h-[40px] ${
                 saved
-                  ? 'border-sky-500 bg-sky-500/15 text-sky-300'
-                  : 'border-[#2A2A38] bg-[#1A1A22] text-[#F5F5F7]'
+                  ? 'bg-[#1ED760] text-black'
+                  : 'border border-white/30 text-white hover:border-white'
               }`}
             >
-              <Bookmark className={`w-3.5 h-3.5 ${saved ? 'fill-sky-400' : ''}`} />
-              <span>{saved ? 'Saved in Library' : 'Save Artist'}</span>
+              <Bookmark className={`w-3.5 h-3.5 ${saved ? 'fill-black' : ''}`} />
+              <span>{saved ? 'Following' : 'Follow'}</span>
             </button>
             <a
               href={data.artist.shareUrl}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs text-[#9494A3] hover:text-white underline underline-offset-4"
+              className="inline-flex items-center gap-1.5 text-xs text-[#B3B3B3] hover:text-white underline underline-offset-4"
             >
               Jamendo Artist Page
               <ExternalLink className="w-3.5 h-3.5" />
@@ -347,10 +354,10 @@ export const ArtistDetailPage: React.FC = () => {
       </section>
 
       <section>
-        <h2 className="font-display text-lg font-semibold text-[#F5F5F7] mb-3">
-          Tracks ({data.tracks.length})
+        <h2 className="font-display text-lg font-bold text-white mb-3">
+          Popular Tracks ({data.tracks.length})
         </h2>
-        <div className="rounded-xl border border-[#22222E] bg-[#15151B] p-2">
+        <div className="rounded-xl bg-[#181818]/60 p-1 sm:p-2">
           {data.tracks.map((track, idx) => (
             <TrackRow
               key={track.id}
@@ -365,25 +372,25 @@ export const ArtistDetailPage: React.FC = () => {
 
       {data.albums.length > 0 && (
         <section>
-          <h2 className="font-display text-lg font-semibold text-[#F5F5F7] mb-3">
-            Albums
+          <h2 className="font-display text-lg font-bold text-white mb-3">
+            Discography
           </h2>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             {data.albums.map((alb) => (
               <Link
                 key={alb.id}
                 to={`/album/${alb.id}`}
-                className="rounded-xl border border-[#22222E] bg-[#15151B] p-3.5 hover:border-[#343446]"
+                className="rounded-xl bg-[#181818] hover:bg-[#242424] p-3.5 transition-colors"
               >
                 <ArtworkImage
                   src={alb.artworkUrl}
                   alt={alb.name}
                   className="w-full aspect-square rounded-lg"
                 />
-                <p className="mt-2.5 truncate text-sm font-medium text-[#F5F5F7]">
+                <p className="mt-2.5 truncate text-sm font-bold text-white">
                   {alb.name}
                 </p>
-                <p className="text-xs text-[#9494A3]">{alb.releaseDate}</p>
+                <p className="text-xs text-[#B3B3B3]">{alb.releaseDate}</p>
               </Link>
             ))}
           </div>
@@ -400,8 +407,12 @@ export const ArtistDetailPage: React.FC = () => {
 
 export const AlbumDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const { commercialUseMode, isSavedCollection, toggleSaveCollection, recordPlay } =
-    useLibrary();
+  const {
+    commercialUseMode,
+    isSavedCollection,
+    toggleSaveCollection,
+    recordPlay,
+  } = useLibrary();
   const { playTrack } = usePlayerStore();
   const [modalTrack, setModalTrack] = useState<NormalizedTrack | null>(null);
 
@@ -415,11 +426,11 @@ export const AlbumDetailPage: React.FC = () => {
   });
 
   if (isLoading) {
-    return <div className="h-64 rounded-2xl bg-[#15151B] animate-pulse" />;
+    return <div className="h-64 rounded-2xl bg-[#181818] animate-pulse" />;
   }
   if (isError || !data) {
     return (
-      <div className="rounded-xl border border-[#262632] bg-[#15151B] p-8 text-center text-sm text-[#9494A3]">
+      <div className="rounded-2xl bg-[#181818] p-8 text-center text-sm text-[#B3B3B3]">
         Album details unavailable.
       </div>
     );
@@ -429,31 +440,31 @@ export const AlbumDetailPage: React.FC = () => {
 
   return (
     <div className="space-y-8">
-      <section className="flex flex-col sm:flex-row gap-6 rounded-2xl border border-[#22222E] bg-[#15151B] p-6 sm:p-8">
+      <section className="-mx-4 -mt-4 sm:-mx-6 sm:-mt-6 lg:-mx-8 lg:-mt-6 px-4 pt-6 pb-6 sm:px-6 lg:px-8 bg-gradient-to-b from-[#2A2A2A] via-[#1B1B1B] to-[#121212] flex flex-col sm:flex-row items-center sm:items-end gap-6">
         <ArtworkImage
           src={data.album.artworkUrl}
           alt={data.album.name}
-          className="w-44 h-44 rounded-xl mx-auto sm:mx-0"
+          className="w-44 h-44 sm:w-48 sm:h-48 rounded-lg mx-auto sm:mx-0 shadow-[0_20px_50px_rgba(0,0,0,0.65)]"
         />
-        <div className="flex-1 space-y-3">
-          <p className="text-xs font-medium text-sky-400">
+        <div className="flex-1 text-center sm:text-left space-y-3">
+          <p className="text-xs font-bold uppercase tracking-wider text-[#1ED760]">
             Album · {data.album.releaseDate || 'Independent Release'}
           </p>
-          <h1 className="font-display text-3xl font-bold text-[#F5F5F7]">
+          <h1 className="font-display text-3xl sm:text-4xl font-extrabold text-white">
             {data.album.name}
           </h1>
-          <p className="text-sm text-[#9494A3]">
+          <p className="text-sm text-[#B3B3B3]">
             <Link
               to={`/artist/${data.album.artistId}`}
-              className="text-[#F5F5F7] hover:underline underline-offset-4"
+              className="text-white font-semibold hover:underline underline-offset-4"
             >
               {data.album.artistName}
             </Link>
             <span className="mx-2">·</span>
-            <span>{data.tracks.length} tracks</span>
+            <span>{data.tracks.length} songs</span>
           </p>
 
-          <div className="flex flex-wrap items-center gap-3 pt-2">
+          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 pt-1">
             {data.tracks[0] && (
               <button
                 type="button"
@@ -461,10 +472,10 @@ export const AlbumDetailPage: React.FC = () => {
                   void playTrack(data.tracks[0], data.tracks);
                   void recordPlay(data.tracks[0]);
                 }}
-                className="inline-flex items-center gap-2 rounded-lg bg-sky-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-sky-500"
+                aria-label={`Play album ${data.album.name}`}
+                className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-[#1ED760] text-black hover:bg-[#1FDF64] hover:scale-105 active:scale-95 transition-all shadow-xl"
               >
-                <Play className="w-4 h-4 fill-white" />
-                <span>Play Album</span>
+                <Play className="w-6 h-6 fill-black ml-0.5" />
               </button>
             )}
             <button
@@ -478,13 +489,13 @@ export const AlbumDetailPage: React.FC = () => {
                   artworkUrl: data.album.artworkUrl,
                 })
               }
-              className={`inline-flex items-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium transition-colors ${
+              className={`inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-xs font-bold transition-colors min-h-[42px] ${
                 saved
-                  ? 'border-sky-500 bg-sky-500/15 text-sky-300'
-                  : 'border-[#2A2A38] bg-[#1A1A22] text-[#F5F5F7]'
+                  ? 'bg-[#1ED760]/15 text-[#1ED760] border border-[#1ED760]'
+                  : 'bg-[#242424] text-white hover:bg-[#303030]'
               }`}
             >
-              <Bookmark className={`w-4 h-4 ${saved ? 'fill-sky-400' : ''}`} />
+              <Bookmark className={`w-4 h-4 ${saved ? 'fill-[#1ED760]' : ''}`} />
               <span>{saved ? 'Saved Album' : 'Save Album'}</span>
             </button>
           </div>
@@ -492,7 +503,7 @@ export const AlbumDetailPage: React.FC = () => {
       </section>
 
       <section>
-        <div className="rounded-xl border border-[#22222E] bg-[#15151B] p-2">
+        <div className="rounded-xl bg-[#181818]/60 p-1 sm:p-2">
           {data.tracks.map((track, idx) => (
             <TrackRow
               key={track.id}

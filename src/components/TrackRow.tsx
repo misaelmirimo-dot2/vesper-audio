@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
+  ArrowDownCircle,
   CheckCircle2,
-  Download,
   Heart,
   ListPlus,
   Loader2,
@@ -54,7 +54,6 @@ export const TrackRow: React.FC<TrackRowProps> = ({
   const isDownloaded = downloadEntry?.status === 'completed';
   const isDownloading = downloadEntry?.status === 'downloading';
 
-  // Client display mirrors server license evaluation; commercial mode also checked by backend
   const permitted =
     track.licenseEvaluation.offlineDownloadPermitted &&
     (!commercialUseMode || track.licenseEvaluation.commercialUsePermitted);
@@ -89,10 +88,18 @@ export const TrackRow: React.FC<TrackRowProps> = ({
   };
 
   return (
-    <div className="group border-b border-[#1C1C2E] last:border-b-0 transition-colors">
-      <div className="flex items-center gap-3.5 px-3.5 py-3 rounded-xl hover:bg-[#13131D] transition-all">
+    <div className="group transition-colors">
+      <div
+        className={`flex items-center gap-3 px-2.5 sm:px-3.5 py-2.5 rounded-lg transition-colors ${
+          isCurrent ? 'bg-white/[0.07]' : 'hover:bg-white/[0.06]'
+        }`}
+      >
         {typeof index === 'number' && (
-          <span className="hidden sm:block w-6 text-right text-xs font-mono-tabular text-[#64748B]">
+          <span
+            className={`hidden sm:block w-5 text-right text-xs font-mono-tabular ${
+              isCurrent ? 'text-[#1ED760] font-semibold' : 'text-[#B3B3B3]'
+            }`}
+          >
             {index + 1}
           </span>
         )}
@@ -105,12 +112,12 @@ export const TrackRow: React.FC<TrackRowProps> = ({
               ? `Pause ${track.title}`
               : `Play ${track.title}`
           }
-          className="relative flex items-center justify-center w-11 h-11 rounded-xl overflow-hidden shrink-0 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500"
+          className="relative flex items-center justify-center w-12 h-12 sm:w-11 sm:h-11 rounded-md overflow-hidden shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1ED760]"
         >
           <ArtworkImage
             src={track.artworkUrl}
             alt={`${track.title} artwork`}
-            className="w-11 h-11 rounded-xl transition-transform group-hover:scale-105"
+            className="w-12 h-12 sm:w-11 sm:h-11 rounded-md"
           />
           <span
             className={`absolute inset-0 flex items-center justify-center bg-black/55 transition-opacity ${
@@ -120,7 +127,7 @@ export const TrackRow: React.FC<TrackRowProps> = ({
             }`}
           >
             {isCurrentPlaying ? (
-              <Pause className="w-4 h-4 text-white fill-white" />
+              <Pause className="w-4 h-4 text-[#1ED760] fill-[#1ED760]" />
             ) : (
               <Play className="w-4 h-4 text-white fill-white ml-0.5" />
             )}
@@ -128,62 +135,68 @@ export const TrackRow: React.FC<TrackRowProps> = ({
         </button>
 
         <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2 min-w-0">
+          <div className="flex items-center gap-1.5 min-w-0">
             {track.provider === 'local' ? (
-              <span
-                className={`truncate text-sm font-medium ${
-                  isCurrent ? 'text-sky-400 font-semibold' : 'text-[#F8FAFC]'
+              <button
+                type="button"
+                onClick={() => void handlePlay()}
+                className={`truncate text-left text-[15px] sm:text-sm font-medium ${
+                  isCurrent ? 'text-[#1ED760] font-semibold' : 'text-white'
                 }`}
               >
                 {track.title}
-              </span>
+              </button>
             ) : (
               <Link
                 to={`/track/${track.id}`}
-                className={`truncate text-sm font-medium hover:underline underline-offset-4 ${
-                  isCurrent ? 'text-sky-400 font-semibold' : 'text-[#F8FAFC]'
+                className={`truncate text-[15px] sm:text-sm font-medium hover:underline underline-offset-4 ${
+                  isCurrent ? 'text-[#1ED760] font-semibold' : 'text-white'
                 }`}
               >
                 {track.title}
               </Link>
             )}
           </div>
-          <div className="mt-0.5 flex items-center gap-1.5 text-xs text-[#94A3B8] truncate">
+          <div className="mt-0.5 flex items-center gap-1.5 text-xs text-[#B3B3B3] truncate">
+            {isDownloaded && (
+              <CheckCircle2
+                className="w-3.5 h-3.5 text-[#1ED760] shrink-0"
+                aria-label="Downloaded offline"
+              />
+            )}
             {track.provider === 'local' ? (
               <>
                 <span className="truncate">{track.artistName}</span>
                 <span aria-hidden="true">·</span>
-                <span className="text-[#64748B]">Local Offline</span>
+                <span className="text-[#727272]">Local</span>
               </>
             ) : (
               <>
                 <Link
                   to={`/artist/${track.artistId}`}
-                  className="hover:text-[#F8FAFC] truncate"
+                  className="hover:text-white truncate"
                 >
                   {track.artistName}
-                </Link>
-                <span aria-hidden="true">·</span>
-                <Link
-                  to={`/album/${track.albumId}`}
-                  className="hidden sm:inline hover:text-[#F8FAFC] truncate"
-                >
-                  {track.albumName}
                 </Link>
                 <span className="hidden sm:inline" aria-hidden="true">
                   ·
                 </span>
-                <span className="text-[#64748B]">{track.licenseType}</span>
+                <Link
+                  to={`/album/${track.albumId}`}
+                  className="hidden sm:inline hover:text-white truncate"
+                >
+                  {track.albumName}
+                </Link>
               </>
             )}
           </div>
         </div>
 
-        <span className="hidden md:inline-block text-xs font-mono-tabular text-[#94A3B8] w-12 text-right shrink-0">
+        <span className="hidden md:inline-block text-xs font-mono-tabular text-[#B3B3B3] w-11 text-right shrink-0">
           {formatDuration(track.duration)}
         </span>
 
-        <div className="flex items-center gap-1 shrink-0">
+        <div className="flex items-center gap-0.5 shrink-0">
           <button
             type="button"
             onClick={() => void toggleFavorite(track)}
@@ -192,14 +205,16 @@ export const TrackRow: React.FC<TrackRowProps> = ({
                 ? `Remove ${track.title} from favorites`
                 : `Add ${track.title} to favorites`
             }
-            className={`min-w-[40px] min-h-[40px] flex items-center justify-center rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 ${
+            className={`min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1ED760] ${
               favorited
-                ? 'text-sky-400 hover:bg-sky-500/15'
-                : 'text-[#94A3B8] hover:text-white hover:bg-[#13131D]'
+                ? 'text-[#1ED760]'
+                : 'text-[#B3B3B3] hover:text-white'
             }`}
           >
             <Heart
-              className={`w-4 h-4 ${favorited ? 'fill-sky-400' : ''}`}
+              className={`w-[18px] h-[18px] ${
+                favorited ? 'fill-[#1ED760]' : ''
+              }`}
             />
           </button>
 
@@ -208,18 +223,18 @@ export const TrackRow: React.FC<TrackRowProps> = ({
               type="button"
               onClick={() => onRequestAddToPlaylist(track)}
               aria-label={`Add ${track.title} to playlist`}
-              className="min-w-[40px] min-h-[40px] flex items-center justify-center rounded-xl text-[#94A3B8] hover:text-white hover:bg-[#13131D] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500"
+              className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full text-[#B3B3B3] hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1ED760]"
             >
-              <ListPlus className="w-4 h-4" />
+              <ListPlus className="w-[18px] h-[18px]" />
             </button>
           )}
 
           {track.provider === 'local' ? (
             <span
-              className="min-w-[40px] min-h-[40px] flex items-center justify-center text-emerald-400"
+              className="min-w-[40px] min-h-[44px] flex items-center justify-center text-[#1ED760]"
               title="Stored locally on this device"
             >
-              <CheckCircle2 className="w-4 h-4" />
+              <CheckCircle2 className="w-[18px] h-[18px]" />
             </span>
           ) : isDownloaded ? (
             <button
@@ -227,26 +242,26 @@ export const TrackRow: React.FC<TrackRowProps> = ({
               onClick={() => void removeDownload(track.id)}
               aria-label={`Remove offline download for ${track.title}`}
               title="Downloaded offline (click to remove)"
-              className="min-w-[40px] min-h-[40px] flex items-center justify-center rounded-xl text-emerald-400 hover:bg-rose-500/10 hover:text-rose-400 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500"
+              className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full text-[#1ED760] hover:text-rose-400 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1ED760]"
             >
-              <CheckCircle2 className="w-4 h-4 group-hover:hidden" />
-              <Trash2 className="w-4 h-4 hidden group-hover:block" />
+              <CheckCircle2 className="w-[18px] h-[18px] group-hover:hidden" />
+              <Trash2 className="w-[18px] h-[18px] hidden group-hover:block" />
             </button>
           ) : isDownloading ? (
             <span
-              className="min-w-[40px] min-h-[40px] flex items-center justify-center text-sky-400 text-xs font-mono-tabular"
+              className="min-w-[44px] min-h-[44px] flex items-center justify-center text-[#1ED760] text-xs font-mono-tabular"
               aria-label={`Downloading ${track.title}`}
             >
-              <Loader2 className="w-4 h-4 animate-spin" />
+              <Loader2 className="w-[18px] h-[18px] animate-spin" />
             </span>
           ) : permitted ? (
             <button
               type="button"
               onClick={() => void handleDownload()}
               aria-label={`Download ${track.title} for offline listening`}
-              className="min-w-[40px] min-h-[40px] flex items-center justify-center rounded-xl text-[#94A3B8] hover:text-sky-400 hover:bg-sky-500/15 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500"
+              className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full text-[#B3B3B3] hover:text-[#1ED760] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1ED760]"
             >
-              <Download className="w-4 h-4" />
+              <ArrowDownCircle className="w-[18px] h-[18px]" />
             </button>
           ) : (
             <button
@@ -254,7 +269,7 @@ export const TrackRow: React.FC<TrackRowProps> = ({
               onClick={() => setShowBlockedInfo((v) => !v)}
               aria-label={`Download restricted for ${track.title}`}
               title={blockedMessage}
-              className="min-w-[40px] min-h-[40px] flex items-center justify-center rounded-xl text-[#64748B] hover:text-[#94A3B8] hover:bg-[#13131D] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500"
+              className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full text-[#727272] hover:text-[#B3B3B3] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1ED760]"
             >
               <Lock className="w-4 h-4" />
             </button>
@@ -265,14 +280,14 @@ export const TrackRow: React.FC<TrackRowProps> = ({
       </div>
 
       {showBlockedInfo && !permitted && (
-        <div className="mx-3 mb-2.5 rounded-xl border border-[#1C1C2E] bg-[#0A0A10] px-3.5 py-2.5 text-xs text-[#94A3B8]">
-          <span className="font-medium text-[#F8FAFC]">Download unavailable: </span>
+        <div className="mx-3 mb-2 rounded-lg bg-[#242424] px-3.5 py-2.5 text-xs text-[#B3B3B3]">
+          <span className="font-semibold text-white">Download unavailable: </span>
           {blockedMessage}
         </div>
       )}
 
       {dlError && (
-        <div className="mx-3 mb-2.5 rounded-xl border border-rose-500/30 bg-rose-500/10 px-3.5 py-2.5 text-xs text-rose-400">
+        <div className="mx-3 mb-2 rounded-lg bg-rose-500/15 px-3.5 py-2.5 text-xs text-rose-300">
           {dlError}
         </div>
       )}

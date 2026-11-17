@@ -129,37 +129,38 @@ export const DownloadsPage: React.FC = () => {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="font-display text-2xl font-bold text-[#F8FAFC]">
-          Offline Media & Downloads
+        <h1 className="font-display text-2xl sm:text-3xl font-extrabold text-white">
+          Offline Media &amp; Downloads
         </h1>
-        <p className="mt-1 text-sm text-[#94A3B8]">
-          Import your own audio & video files for offline playback, and manage
-          authorized Jamendo tracks stored in browser Cache Storage.
+        <p className="mt-1 text-sm text-[#B3B3B3]">
+          Import audio &amp; video files from your device and manage cached offline tracks.
         </p>
       </div>
 
       {/* Storage Quota Summary */}
-      <section className="rounded-2xl border border-[#1C1C2E] bg-[#0A0A10] p-5 space-y-3 shadow-lg">
+      <section className="rounded-2xl bg-[#181818] p-5 space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="flex items-center gap-2.5">
-            <HardDrive className="w-5 h-5 text-sky-400" />
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#1ED760]/15 text-[#1ED760]">
+              <HardDrive className="w-5 h-5" />
+            </div>
             <div>
-              <p className="text-sm font-semibold text-[#F8FAFC]">
+              <p className="text-sm font-bold text-white">
                 Offline Device Storage
               </p>
-              <p className="text-xs text-[#94A3B8]">
+              <p className="text-xs text-[#B3B3B3]">
                 {storageInfo.persisted
-                  ? 'Persistent storage granted by browser'
-                  : 'Best-effort browser storage (subject to device eviction limits)'}
+                  ? 'Persistent storage granted'
+                  : 'Browser-managed offline storage'}
               </p>
             </div>
           </div>
           <div className="text-right font-mono-tabular">
-            <p className="text-sm font-semibold text-[#F8FAFC]">
+            <p className="text-sm font-bold text-white">
               {formatBytes(totalAudioBytes + totalLocalBytes)} media stored
             </p>
-            <p className="text-xs text-[#94A3B8]">
-              Total origin usage: {formatBytes(storageInfo.usageBytes)} /{' '}
+            <p className="text-xs text-[#B3B3B3]">
+              Origin usage: {formatBytes(storageInfo.usageBytes)} /{' '}
               {storageInfo.quotaBytes > 0
                 ? formatBytes(storageInfo.quotaBytes)
                 : 'Available'}
@@ -167,9 +168,9 @@ export const DownloadsPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="h-2 w-full rounded-full bg-[#1C1C2E] overflow-hidden">
+        <div className="h-1.5 w-full rounded-full bg-white/15 overflow-hidden">
           <div
-            className="h-full bg-sky-500 transition-all"
+            className="h-full bg-[#1ED760] transition-all"
             style={{ width: `${Math.max(2, usagePct)}%` }}
           />
         </div>
@@ -179,19 +180,18 @@ export const DownloadsPage: React.FC = () => {
       <section className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="text-base font-semibold text-[#F8FAFC]">
-              Local Audio & Video Locker ({localMedia.length})
+            <h2 className="font-display text-lg font-bold text-white">
+              Local Audio &amp; Video Locker ({localMedia.length})
             </h2>
-            <p className="text-xs text-[#94A3B8]">
-              Your imported MP3, M4A, WAV, FLAC, MP4, WebM & MOV files stay
-              private on this device and work 100% offline.
+            <p className="text-xs text-[#B3B3B3]">
+              Imported MP3, M4A, WAV, FLAC, MP4, WebM &amp; MOV files stay private on this device.
             </p>
           </div>
 
           <div
             role="tablist"
             aria-label="Filter local media"
-            className="flex items-center gap-1 p-1 rounded-xl bg-[#0A0A10] border border-[#1C1C2E]"
+            className="flex items-center gap-1.5"
           >
             {(
               [
@@ -212,10 +212,10 @@ export const DownloadsPage: React.FC = () => {
                 role="tab"
                 aria-selected={mediaFilter === key}
                 onClick={() => setMediaFilter(key)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
+                className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-colors min-h-[34px] ${
                   mediaFilter === key
-                    ? 'bg-sky-500 text-white shadow-sm'
-                    : 'text-[#94A3B8] hover:text-white'
+                    ? 'bg-[#1ED760] text-black'
+                    : 'bg-[#242424] text-white hover:bg-[#2E2E2E]'
                 }`}
               >
                 {label}
@@ -230,14 +230,14 @@ export const DownloadsPage: React.FC = () => {
         {activeVideo && videoObjectUrl && (
           <div
             aria-label="Offline local video player"
-            className="rounded-2xl border border-[#2C2C44] bg-[#0A0A10] overflow-hidden shadow-2xl"
+            className="rounded-2xl bg-[#181818] border border-white/10 overflow-hidden shadow-2xl"
           >
-            <div className="flex items-center justify-between gap-3 border-b border-[#1C1C2E] px-4 py-3">
+            <div className="flex items-center justify-between gap-3 border-b border-white/10 px-4 py-3">
               <div className="min-w-0">
-                <p className="text-xs font-medium text-sky-400">
+                <p className="text-xs font-bold text-[#1ED760]">
                   Offline Video Stage
                 </p>
-                <h3 className="truncate text-sm font-semibold text-[#F8FAFC]">
+                <h3 className="truncate text-sm font-bold text-white">
                   {activeVideo.title}
                 </h3>
               </div>
@@ -245,7 +245,7 @@ export const DownloadsPage: React.FC = () => {
                 type="button"
                 onClick={handleCloseVideoStage}
                 aria-label="Close local video player"
-                className="min-w-[40px] min-h-[40px] inline-flex items-center justify-center rounded-xl border border-[#2C2C44] bg-[#13131D] text-[#94A3B8] hover:text-white"
+                className="min-w-[40px] min-h-[40px] inline-flex items-center justify-center rounded-full bg-[#242424] text-[#B3B3B3] hover:text-white"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -276,27 +276,26 @@ export const DownloadsPage: React.FC = () => {
         )}
 
         {filteredLocalMedia.length === 0 ? (
-          <div className="rounded-2xl border border-[#1C1C2E] bg-[#0A0A10] p-8 text-center space-y-2 shadow-lg">
-            <FileAudio className="w-7 h-7 text-[#64748B] mx-auto" />
-            <p className="text-sm font-medium text-[#F8FAFC]">
+          <div className="rounded-2xl bg-[#181818] p-8 text-center space-y-2">
+            <FileAudio className="w-7 h-7 text-[#B3B3B3] mx-auto" />
+            <p className="text-sm font-bold text-white">
               {localMedia.length === 0
                 ? 'No local files imported yet'
                 : `No local ${mediaFilter} files in locker`}
             </p>
-            <p className="text-xs text-[#94A3B8] max-w-md mx-auto">
-              Use Choose Files above to store your own songs or music videos in
-              IndexedDB for offline listening and viewing.
+            <p className="text-xs text-[#B3B3B3] max-w-md mx-auto">
+              Use Choose Files above to store songs or music videos offline on this device.
             </p>
           </div>
         ) : (
-          <div className="rounded-2xl border border-[#1C1C2E] bg-[#0A0A10] divide-y divide-[#1C1C2E] shadow-lg">
+          <div className="rounded-xl bg-[#181818] divide-y divide-white/[0.06]">
             {filteredLocalMedia.map((item) => {
               const isVideoActive = activeVideo?.id === item.id;
               return (
                 <div
                   key={item.id}
                   className={`flex items-center gap-3 p-3.5 transition-colors ${
-                    isVideoActive ? 'bg-[#13131D]' : 'hover:bg-[#13131D]'
+                    isVideoActive ? 'bg-white/10' : 'hover:bg-white/[0.05]'
                   }`}
                 >
                   <button
@@ -305,7 +304,7 @@ export const DownloadsPage: React.FC = () => {
                     aria-label={`Play local ${item.mediaType} ${item.title}`}
                     className="flex items-center gap-3 flex-1 min-w-0 text-left"
                   >
-                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-sky-500/15 border border-sky-500/30 text-sky-400">
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-[#1ED760]/15 text-[#1ED760]">
                       {item.mediaType === 'video' ? (
                         <FileVideo className="w-5 h-5" />
                       ) : (
@@ -313,10 +312,10 @@ export const DownloadsPage: React.FC = () => {
                       )}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium text-[#F8FAFC]">
+                      <p className="truncate text-sm font-semibold text-white">
                         {item.title}
                       </p>
-                      <p className="mt-0.5 truncate text-xs text-[#94A3B8]">
+                      <p className="mt-0.5 truncate text-xs text-[#B3B3B3]">
                         {item.artist} · {item.mediaType.toUpperCase()} ·{' '}
                         <span className="font-mono-tabular">
                           {formatBytes(item.fileSizeBytes)}
@@ -339,7 +338,7 @@ export const DownloadsPage: React.FC = () => {
                           setModalTrack(localMediaToNormalizedTrack(item))
                         }
                         aria-label={`Add ${item.title} to playlist`}
-                        className="min-w-[40px] min-h-[40px] flex items-center justify-center rounded-xl text-[#94A3B8] hover:text-sky-400 hover:bg-sky-500/15 transition-colors"
+                        className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full text-[#B3B3B3] hover:text-white transition-colors"
                       >
                         <ListPlus className="w-4 h-4" />
                       </button>
@@ -349,16 +348,16 @@ export const DownloadsPage: React.FC = () => {
                       type="button"
                       onClick={() => void handlePlayLocalItem(item)}
                       aria-label={`Play ${item.title}`}
-                      className="min-w-[40px] min-h-[40px] flex items-center justify-center rounded-xl text-sky-400 hover:bg-sky-500/15 transition-colors"
+                      className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full text-[#1ED760] hover:bg-[#1ED760]/15 transition-colors"
                     >
-                      <Play className="w-4 h-4 fill-current" />
+                      <Play className="w-5 h-5 fill-[#1ED760]" />
                     </button>
 
                     <button
                       type="button"
                       onClick={() => void handleDeleteLocalItem(item)}
                       aria-label={`Delete local file ${item.title}`}
-                      className="min-w-[40px] min-h-[40px] flex items-center justify-center rounded-xl text-[#94A3B8] hover:text-rose-400 hover:bg-rose-500/10 transition-colors"
+                      className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full text-[#B3B3B3] hover:text-rose-400 transition-colors"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -373,32 +372,32 @@ export const DownloadsPage: React.FC = () => {
       {/* Active Downloads */}
       {active.length > 0 && (
         <section className="space-y-3">
-          <h2 className="text-base font-semibold text-[#F8FAFC]">
+          <h2 className="font-display text-lg font-bold text-white">
             In Progress ({active.length})
           </h2>
           <div className="space-y-2">
             {active.map((d) => (
               <div
                 key={d.trackId}
-                className="flex items-center gap-4 rounded-2xl border border-[#1C1C2E] bg-[#0A0A10] p-4 shadow-lg"
+                className="flex items-center gap-4 rounded-xl bg-[#181818] p-4"
               >
                 <ArtworkImage
                   src={d.track.artworkUrl}
                   alt={d.track.title}
-                  className="w-12 h-12 rounded-xl"
+                  className="w-12 h-12 rounded-md"
                 />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-2">
-                    <p className="truncate text-sm font-medium text-[#F8FAFC]">
+                    <p className="truncate text-sm font-semibold text-white">
                       {d.track.title}
                     </p>
-                    <span className="text-xs font-mono-tabular text-sky-400">
+                    <span className="text-xs font-mono-tabular text-[#1ED760]">
                       {d.progress}%
                     </span>
                   </div>
-                  <div className="mt-2 h-1.5 w-full rounded-full bg-[#1C1C2E] overflow-hidden">
+                  <div className="mt-2 h-1.5 w-full rounded-full bg-white/15 overflow-hidden">
                     <div
-                      className="h-full bg-sky-500 transition-all"
+                      className="h-full bg-[#1ED760] transition-all"
                       style={{ width: `${d.progress}%` }}
                     />
                   </div>
@@ -407,7 +406,7 @@ export const DownloadsPage: React.FC = () => {
                   type="button"
                   onClick={() => cancelDownload(d.trackId)}
                   aria-label={`Cancel download for ${d.track.title}`}
-                  className="rounded-xl border border-[#2C2C44] px-3.5 py-1.5 text-xs text-[#94A3B8] hover:text-white"
+                  className="rounded-full bg-[#242424] px-4 py-1.5 text-xs font-semibold text-[#B3B3B3] hover:text-white"
                 >
                   Cancel
                 </button>
@@ -419,9 +418,9 @@ export const DownloadsPage: React.FC = () => {
 
       {/* Completed Jamendo Downloads */}
       <section className="space-y-3">
-        <div className="flex items-center justify-between">
-          <h2 className="text-base font-semibold text-[#F8FAFC]">
-            Authorized Jamendo Offline Tracks ({completed.length})
+        <div className="flex items-center justify-between gap-3">
+          <h2 className="font-display text-lg font-bold text-white">
+            Cached Offline Tracks ({completed.length})
           </h2>
           {completed.length > 0 && (
             <button
@@ -433,32 +432,31 @@ export const DownloadsPage: React.FC = () => {
                 );
                 void recordPlay(completed[0].track);
               }}
-              className="inline-flex items-center gap-1.5 rounded-xl bg-sky-500 px-3.5 py-2 text-xs font-medium text-white hover:bg-sky-400 whitespace-nowrap shadow-md shadow-sky-500/25"
+              className="inline-flex items-center gap-1.5 rounded-full bg-[#1ED760] px-5 py-2.5 text-xs font-bold text-black hover:bg-[#1FDF64] active:scale-[0.97] transition-all whitespace-nowrap"
             >
-              <Play className="w-3.5 h-3.5 fill-white" />
+              <Play className="w-3.5 h-3.5 fill-black" />
               Play All Offline
             </button>
           )}
         </div>
 
         {completed.length === 0 ? (
-          <div className="rounded-2xl border border-[#1C1C2E] bg-[#0A0A10] p-10 text-center space-y-2 shadow-lg">
-            <ShieldCheck className="w-7 h-7 text-[#64748B] mx-auto" />
-            <p className="text-sm font-medium text-[#F8FAFC]">
-              No Jamendo offline tracks stored yet
+          <div className="rounded-2xl bg-[#181818] p-10 text-center space-y-2">
+            <ShieldCheck className="w-7 h-7 text-[#B3B3B3] mx-auto" />
+            <p className="text-sm font-bold text-white">
+              No offline tracks cached yet
             </p>
-            <p className="text-xs text-[#94A3B8] max-w-md mx-auto">
-              Tracks with artist permission (audiodownload_allowed = true) and a
-              compatible Creative Commons licence can be downloaded directly from
-              Discover or Search.
+            <p className="text-xs text-[#B3B3B3] max-w-md mx-auto">
+              Tracks with artist permission and a compatible Creative Commons
+              licence can be downloaded from Discover or Search.
             </p>
           </div>
         ) : (
-          <div className="rounded-2xl border border-[#1C1C2E] bg-[#0A0A10] divide-y divide-[#1C1C2E] shadow-lg">
+          <div className="rounded-xl bg-[#181818] divide-y divide-white/[0.06]">
             {completed.map((d) => (
               <div
                 key={d.trackId}
-                className="flex items-center gap-3 p-3.5 hover:bg-[#13131D] transition-colors"
+                className="flex items-center gap-3 p-3.5 hover:bg-white/[0.05] transition-colors"
               >
                 <button
                   type="button"
@@ -475,13 +473,13 @@ export const DownloadsPage: React.FC = () => {
                   <ArtworkImage
                     src={d.track.artworkUrl}
                     alt={d.track.title}
-                    className="w-12 h-12 rounded-xl"
+                    className="w-12 h-12 rounded-md"
                   />
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium text-[#F8FAFC]">
+                    <p className="truncate text-sm font-semibold text-white">
                       {d.track.title}
                     </p>
-                    <p className="mt-0.5 truncate text-xs text-[#94A3B8]">
+                    <p className="mt-0.5 truncate text-xs text-[#B3B3B3]">
                       {d.track.artistName} · {d.licenseType} ·{' '}
                       <span className="font-mono-tabular">
                         {formatBytes(d.fileSizeBytes)}
@@ -490,16 +488,16 @@ export const DownloadsPage: React.FC = () => {
                   </div>
                 </button>
 
-                <span className="hidden sm:inline-flex items-center gap-1 text-xs text-emerald-400 mr-2">
+                <span className="hidden sm:inline-flex items-center gap-1 text-xs font-semibold text-[#1ED760] mr-2">
                   <CheckCircle2 className="w-3.5 h-3.5" />
-                  Cached
+                  Downloaded
                 </span>
 
                 <button
                   type="button"
                   onClick={() => void removeDownload(d.trackId)}
                   aria-label={`Delete offline download ${d.track.title}`}
-                  className="min-w-[40px] min-h-[40px] flex items-center justify-center rounded-xl text-[#94A3B8] hover:text-rose-400 hover:bg-rose-500/10 transition-colors"
+                  className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full text-[#B3B3B3] hover:text-rose-400 transition-colors"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
@@ -512,10 +510,10 @@ export const DownloadsPage: React.FC = () => {
       {/* Interrupted / Failed Downloads */}
       {failed.length > 0 && (
         <section className="space-y-3">
-          <h2 className="text-base font-semibold text-[#F8FAFC]">
+          <h2 className="font-display text-lg font-bold text-white">
             Interrupted or Cancelled ({failed.length})
           </h2>
-          <div className="rounded-2xl border border-[#1C1C2E] bg-[#0A0A10] divide-y divide-[#1C1C2E] shadow-lg">
+          <div className="rounded-xl bg-[#181818] divide-y divide-white/[0.06]">
             {failed.map((d) => (
               <div
                 key={d.trackId}
@@ -524,10 +522,10 @@ export const DownloadsPage: React.FC = () => {
                 <div className="flex items-center gap-3 min-w-0">
                   <XCircle className="w-4 h-4 text-rose-400 shrink-0" />
                   <div className="min-w-0">
-                    <p className="truncate text-sm font-medium text-[#F8FAFC]">
+                    <p className="truncate text-sm font-semibold text-white">
                       {d.track.title}
                     </p>
-                    <p className="truncate text-xs text-[#94A3B8]">
+                    <p className="truncate text-xs text-[#B3B3B3]">
                       {d.errorMessage || 'Download interrupted'}
                     </p>
                   </div>
@@ -536,7 +534,7 @@ export const DownloadsPage: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => void startDownload(d.track)}
-                    className="inline-flex items-center gap-1 rounded-xl border border-[#2C2C44] px-3 py-1.5 text-xs text-[#F8FAFC] hover:border-sky-500/40 transition-colors"
+                    className="inline-flex items-center gap-1 rounded-full bg-[#242424] px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-[#303030]"
                   >
                     <RefreshCw className="w-3.5 h-3.5" />
                     Retry
@@ -545,7 +543,7 @@ export const DownloadsPage: React.FC = () => {
                     type="button"
                     onClick={() => void removeDownload(d.trackId)}
                     aria-label={`Clear failed download ${d.track.title}`}
-                    className="p-2 text-[#94A3B8] hover:text-rose-400 rounded-xl"
+                    className="min-w-[40px] min-h-[40px] flex items-center justify-center text-[#B3B3B3] hover:text-rose-400 rounded-full"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>

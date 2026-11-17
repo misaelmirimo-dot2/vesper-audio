@@ -15,7 +15,7 @@ export const PWAInstallButton: React.FC<{ compact?: boolean }> = ({
       <button
         type="button"
         onClick={() => void install()}
-        className="flex items-center justify-center gap-2 rounded-lg bg-sky-600 px-3.5 py-2 text-xs font-medium text-white hover:bg-sky-500 transition-colors whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
+        className="flex items-center justify-center gap-2 rounded-full bg-[#1ED760] px-4 py-2 text-xs font-bold text-black hover:bg-[#1FDF64] active:scale-[0.97] transition-all whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white min-h-[36px]"
       >
         <Download className="w-3.5 h-3.5" />
         <span>{compact ? 'Install' : 'Install App'}</span>
@@ -29,24 +29,25 @@ export const PWAInstallButton: React.FC<{ compact?: boolean }> = ({
         <button
           type="button"
           onClick={() => setShowIOSGuide(true)}
-          className="flex items-center justify-center gap-2 rounded-lg border border-[#2A2A38] bg-[#15151B] px-3 py-2 text-xs font-medium text-[#F5F5F7] hover:bg-[#1C1C24] transition-colors whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
+          className="flex items-center justify-center gap-1.5 rounded-full bg-[#242424] px-3.5 py-2 text-xs font-semibold text-white hover:bg-[#2E2E2E] active:scale-[0.97] transition-all whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1ED760] min-h-[36px]"
         >
-          <Share className="w-3.5 h-3.5 text-sky-400" />
-          <span>Install on iOS</span>
+          <Share className="w-3.5 h-3.5 text-[#1ED760]" />
+          <span>{compact ? 'Get App' : 'Install on iOS'}</span>
         </button>
 
         {showIOSGuide && (
           <div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
+            className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/75 backdrop-blur-sm p-0 sm:p-4"
             role="dialog"
             aria-modal="true"
             aria-labelledby="ios-install-title"
           >
-            <div className="w-full max-w-sm rounded-xl border border-[#262632] bg-[#15151B] p-6 shadow-2xl">
+            <div className="w-full sm:max-w-sm rounded-t-3xl sm:rounded-2xl bg-[#242424] p-6 shadow-2xl pb-safe">
+              <div className="w-10 h-1 bg-white/25 rounded-full mx-auto mb-4 sm:hidden" />
               <div className="flex items-center justify-between">
                 <h3
                   id="ios-install-title"
-                  className="text-base font-semibold text-[#F5F5F7]"
+                  className="text-base font-bold text-white"
                 >
                   Install Vesper on iPhone / iPad
                 </h3>
@@ -54,12 +55,12 @@ export const PWAInstallButton: React.FC<{ compact?: boolean }> = ({
                   type="button"
                   onClick={() => setShowIOSGuide(false)}
                   aria-label="Close iOS install instructions"
-                  className="p-2 text-[#9494A3] hover:text-white rounded-lg"
+                  className="min-w-[44px] min-h-[44px] flex items-center justify-center text-[#B3B3B3] hover:text-white rounded-full"
                 >
                   <X className="w-4 h-4" />
                 </button>
               </div>
-              <ol className="mt-4 space-y-2.5 text-sm text-[#9494A3]">
+              <ol className="mt-4 space-y-2.5 text-sm text-[#B3B3B3]">
                 <li>1. Tap the Share button in the Safari toolbar.</li>
                 <li>2. Scroll down and select Add to Home Screen.</li>
                 <li>3. Launch Vesper directly from your Home Screen.</li>
@@ -67,7 +68,7 @@ export const PWAInstallButton: React.FC<{ compact?: boolean }> = ({
               <button
                 type="button"
                 onClick={() => setShowIOSGuide(false)}
-                className="mt-5 w-full rounded-lg bg-sky-600 py-2.5 text-sm font-medium text-white hover:bg-sky-500 transition-colors"
+                className="mt-6 w-full rounded-full bg-[#1ED760] py-3 text-sm font-bold text-black hover:bg-[#1FDF64] active:scale-[0.98] transition-all"
               >
                 Got it
               </button>

@@ -26,10 +26,13 @@ const DESKTOP_NAV = [
   { to: '/discover', label: 'Discover', icon: Compass },
   { to: '/search', label: 'Search', icon: Search },
   { to: '/youtube', label: 'YouTube', icon: Video },
-  { to: '/library', label: 'My Library', icon: Library },
-  { to: '/downloads', label: 'Downloads', icon: Download },
+];
+
+const DESKTOP_LIBRARY_NAV = [
+  { to: '/library', label: 'Your Library', icon: Library },
   { to: '/playlists', label: 'Playlists', icon: ListMusic },
-  { to: '/admin', label: 'Admin', icon: Shield },
+  { to: '/downloads', label: 'Offline Locker', icon: Download },
+  { to: '/admin', label: 'Governance', icon: Shield },
   { to: '/settings', label: 'Settings', icon: Settings },
 ];
 
@@ -38,8 +41,39 @@ const MOBILE_NAV = [
   { to: '/search', label: 'Search', icon: Search },
   { to: '/youtube', label: 'YouTube', icon: Video },
   { to: '/library', label: 'Library', icon: Library },
-  { to: '/downloads', label: 'Downloads', icon: Download },
+  { to: '/downloads', label: 'Offline', icon: Download },
 ];
+
+const VesperBrandMark: React.FC<{ className?: string }> = ({
+  className = 'w-7 h-7',
+}) => (
+  <svg
+    viewBox="0 0 32 32"
+    fill="none"
+    aria-hidden="true"
+    className={className}
+  >
+    <circle cx="16" cy="16" r="16" fill="#1ED760" />
+    <path
+      d="M9 12.2C13.6 10.9 18.8 11.1 23 13.4"
+      stroke="#000000"
+      strokeWidth="2.4"
+      strokeLinecap="round"
+    />
+    <path
+      d="M10.2 16.5C14 15.5 18.2 15.7 21.6 17.5"
+      stroke="#000000"
+      strokeWidth="2.2"
+      strokeLinecap="round"
+    />
+    <path
+      d="M11.6 20.6C14.4 19.9 17.5 20.1 20 21.4"
+      stroke="#000000"
+      strokeWidth="2"
+      strokeLinecap="round"
+    />
+  </svg>
+);
 
 export const AppLayout: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -49,111 +83,183 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({
   const isOnline = useOnlineStatus(simulatedOffline);
   const currentTrack = usePlayerStore((s) => s.queue[s.currentIndex]);
 
+  const userInitial = (
+    profile?.username ||
+    firebaseUser?.displayName ||
+    firebaseUser?.email ||
+    'V'
+  )
+    .charAt(0)
+    .toUpperCase();
+
   return (
-    <div className="min-h-screen flex bg-[#030305] text-[#F8FAFC]">
-      {/* Desktop Sidebar */}
+    <div className="min-h-screen flex bg-[#121212] text-white">
+      {/* Desktop Spotify Sidebar (Pure Black Rail + #121212 Cards) */}
       <aside
-        className={`hidden md:flex md:w-60 lg:w-64 md:flex-col md:fixed md:inset-y-0 border-r border-[#1C1C2E] bg-[#0A0A10] ${
-          currentTrack ? 'pb-[76px]' : ''
+        className={`hidden md:flex md:w-64 lg:w-[272px] md:flex-col md:fixed md:inset-y-0 bg-black p-2 gap-2 ${
+          currentTrack ? 'pb-[92px]' : ''
         }`}
       >
-        <div className="flex items-center justify-between px-5 h-16 border-b border-[#1C1C2E]">
+        {/* Top Primary Navigation Box */}
+        <div className="rounded-xl bg-[#121212] px-3 py-3 space-y-1">
           <Link
             to="/"
-            className="font-display text-lg font-bold tracking-tight text-[#F8FAFC] whitespace-nowrap shrink-0 flex items-center gap-2"
+            className="flex items-center gap-2.5 px-3 py-2 mb-1 font-display text-lg font-extrabold tracking-tight text-white whitespace-nowrap shrink-0"
           >
-            <span className="flex h-3 w-3 rounded-full bg-sky-500 shadow-sm shadow-sky-500/50 animate-pulse" />
-            Vesper Audio
+            <VesperBrandMark className="w-7 h-7 shrink-0" />
+            <span>Vesper Audio</span>
           </Link>
+
+          <nav aria-label="Primary desktop navigation" className="space-y-0.5">
+            {DESKTOP_NAV.map((item) => {
+              const Icon = item.icon;
+              return (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  end={item.to === '/'}
+                  className={({ isActive }) =>
+                    `flex items-center gap-3.5 rounded-lg px-3 py-2.5 text-sm font-semibold transition-colors whitespace-nowrap ${
+                      isActive
+                        ? 'text-white bg-[#242424]'
+                        : 'text-[#B3B3B3] hover:text-white'
+                    }`
+                  }
+                >
+                  {({ isActive }) => (
+                    <>
+                      <Icon
+                        className={`w-5 h-5 shrink-0 ${
+                          isActive ? 'text-[#1ED760]' : ''
+                        }`}
+                      />
+                      <span>{item.label}</span>
+                    </>
+                  )}
+                </NavLink>
+              );
+            })}
+          </nav>
         </div>
 
-        <nav
-          aria-label="Primary desktop navigation"
-          className="flex-1 space-y-1 px-3 py-4 overflow-y-auto"
-        >
-          {DESKTOP_NAV.map((item) => {
-            const Icon = item.icon;
-            return (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                end={item.to === '/'}
-                className={({ isActive }) =>
-                  `flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors whitespace-nowrap ${
-                    isActive
-                      ? 'bg-sky-500/15 text-sky-400 font-semibold shadow-sm'
-                      : 'text-[#94A3B8] hover:bg-[#13131D] hover:text-[#F8FAFC]'
-                  }`
-                }
-              >
-                <Icon className="w-4 h-4 shrink-0" />
-                <span>{item.label}</span>
-              </NavLink>
-            );
-          })}
-        </nav>
+        {/* Lower Library & Account Box */}
+        <div className="flex-1 flex flex-col rounded-xl bg-[#121212] overflow-hidden">
+          <nav
+            aria-label="Library and settings navigation"
+            className="flex-1 space-y-0.5 px-3 py-3 overflow-y-auto"
+          >
+            <p className="px-3 pb-2 text-xs font-semibold text-[#B3B3B3]">
+              Library &amp; Tools
+            </p>
+            {DESKTOP_LIBRARY_NAV.map((item) => {
+              const Icon = item.icon;
+              return (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  className={({ isActive }) =>
+                    `flex items-center gap-3.5 rounded-lg px-3 py-2.5 text-sm font-semibold transition-colors whitespace-nowrap ${
+                      isActive
+                        ? 'text-white bg-[#242424]'
+                        : 'text-[#B3B3B3] hover:text-white'
+                    }`
+                  }
+                >
+                  {({ isActive }) => (
+                    <>
+                      <Icon
+                        className={`w-5 h-5 shrink-0 ${
+                          isActive ? 'text-[#1ED760]' : ''
+                        }`}
+                      />
+                      <span>{item.label}</span>
+                    </>
+                  )}
+                </NavLink>
+              );
+            })}
+          </nav>
 
-        <div className="border-t border-[#1C1C2E] p-4 space-y-3">
-          <PWAInstallButton />
+          <div className="border-t border-white/10 p-3 space-y-2.5">
+            <PWAInstallButton />
 
-          {firebaseUser ? (
-            <div className="flex items-center justify-between gap-2 rounded-xl border border-[#1C1C2E] bg-[#13131D] px-3 py-2.5">
-              <div className="min-w-0">
-                <p className="truncate text-xs font-semibold text-[#F8FAFC]">
-                  {profile?.username || firebaseUser.displayName || 'Listener'}
-                </p>
-                <p className="truncate text-[11px] text-[#94A3B8]">
-                  {firebaseUser.email}
-                </p>
+            {firebaseUser ? (
+              <div className="flex items-center justify-between gap-2 rounded-lg bg-[#242424] px-3 py-2">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#1ED760] text-xs font-bold text-black">
+                    {userInitial}
+                  </span>
+                  <div className="min-w-0">
+                    <p className="truncate text-xs font-semibold text-white">
+                      {profile?.username || firebaseUser.displayName || 'Listener'}
+                    </p>
+                    <p className="truncate text-[11px] text-[#B3B3B3]">
+                      {firebaseUser.email}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => void signOut()}
+                  aria-label="Sign out"
+                  className="p-1.5 text-[#B3B3B3] hover:text-white rounded-full transition-colors"
+                >
+                  <LogOut className="w-4 h-4" />
+                </button>
               </div>
-              <button
-                type="button"
-                onClick={() => void signOut()}
-                aria-label="Sign out"
-                className="p-1.5 text-[#94A3B8] hover:text-white rounded-lg transition-colors"
-              >
-                <LogOut className="w-4 h-4" />
-              </button>
-            </div>
-          ) : (
-            <div className="space-y-1.5">
-              <button
-                type="button"
-                onClick={() => void signInWithGoogle()}
-                className="flex w-full items-center justify-center gap-2 rounded-xl border border-[#1C1C2E] bg-[#13131D] px-3.5 py-2.5 text-xs font-medium text-[#F8FAFC] hover:border-sky-500/50 transition-colors"
-              >
-                <LogIn className="w-3.5 h-3.5 text-sky-400" />
-                <span>Sign in with Google</span>
-              </button>
-              {authError && (
-                <p role="alert" className="text-[11px] leading-snug text-rose-400">
-                  {authError}
-                </p>
-              )}
-            </div>
-          )}
+            ) : (
+              <div className="space-y-1.5">
+                <button
+                  type="button"
+                  onClick={() => void signInWithGoogle()}
+                  className="flex w-full items-center justify-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-bold text-black hover:scale-[1.02] active:scale-[0.98] transition-transform"
+                >
+                  <LogIn className="w-3.5 h-3.5" />
+                  <span>Log in with Google</span>
+                </button>
+                {authError && (
+                  <p role="alert" className="text-[11px] leading-snug text-rose-400">
+                    {authError}
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </aside>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col md:pl-60 lg:pl-64 min-w-0">
-        {/* Mobile Top Bar */}
-        <header className="md:hidden flex h-14 items-center justify-between border-b border-[#1C1C2E] bg-[#0A0A10] px-4 sticky top-0 z-20">
+      <div className="flex-1 flex flex-col md:pl-64 lg:pl-[272px] min-w-0 bg-[#121212]">
+        {/* Mobile Top Bar (Compact 48px Spotify iOS Header) */}
+        <header className="md:hidden flex h-12 items-center justify-between bg-[#121212]/90 backdrop-blur-xl px-4 sticky top-0 z-20">
           <Link
             to="/"
-            className="font-display text-base font-bold text-[#F8FAFC] whitespace-nowrap shrink-0 flex items-center gap-2"
+            className="font-display text-base font-extrabold tracking-tight text-white whitespace-nowrap shrink-0 flex items-center gap-2"
           >
-            <span className="flex h-2.5 w-2.5 rounded-full bg-sky-500" />
-            Vesper Audio
+            <VesperBrandMark className="w-6 h-6 shrink-0" />
+            <span>Vesper Audio</span>
           </Link>
           <div className="flex items-center gap-2">
             <PWAInstallButton compact />
             <Link
+              to="/playlists"
+              aria-label="Open playlists"
+              className="min-w-[40px] min-h-[40px] flex items-center justify-center rounded-full text-[#B3B3B3] hover:text-white"
+            >
+              <ListMusic className="w-5 h-5" />
+            </Link>
+            <Link
               to="/settings"
               aria-label="Open settings"
-              className="min-w-[40px] min-h-[40px] flex items-center justify-center rounded-xl text-[#94A3B8] hover:text-white"
+              className="min-w-[40px] min-h-[40px] flex items-center justify-center rounded-full text-[#B3B3B3] hover:text-white"
             >
-              <Settings className="w-4 h-4" />
+              {firebaseUser ? (
+                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#1ED760] text-xs font-bold text-black">
+                  {userInitial}
+                </span>
+              ) : (
+                <Settings className="w-5 h-5" />
+              )}
             </Link>
           </div>
         </header>
@@ -165,8 +271,8 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({
         />
 
         <main
-          className={`flex-1 px-4 sm:px-6 lg:px-10 py-6 max-w-7xl w-full mx-auto ${
-            currentTrack ? 'pb-36 md:pb-28' : 'pb-20 md:pb-12'
+          className={`flex-1 px-4 sm:px-6 lg:px-8 py-4 sm:py-6 max-w-7xl w-full mx-auto ${
+            currentTrack ? 'pb-40 md:pb-28' : 'pb-24 md:pb-12'
           }`}
         >
           {children}
@@ -175,10 +281,10 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({
 
       <GlobalPlayer />
 
-      {/* Mobile Bottom Tab Bar */}
+      {/* Mobile Bottom Tab Bar (Spotify iOS Translucent Gradient Bar, 56px height) */}
       <nav
         aria-label="Primary mobile navigation"
-        className="md:hidden fixed bottom-0 left-0 right-0 z-30 grid grid-cols-5 h-13 border-t border-[#1C1C2E] bg-[#0A0A10]/95 backdrop-blur-md"
+        className="md:hidden fixed bottom-0 left-0 right-0 z-30 grid grid-cols-5 h-14 pb-safe bg-gradient-to-t from-black via-black/95 to-black/80 backdrop-blur-xl border-t border-white/[0.06]"
       >
         {MOBILE_NAV.map((item) => {
           const Icon = item.icon;
@@ -188,13 +294,22 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({
               to={item.to}
               end={item.to === '/'}
               className={({ isActive }) =>
-                `flex flex-col items-center justify-center gap-0.5 text-[10px] font-medium transition-colors ${
-                  isActive ? 'text-sky-400' : 'text-[#94A3B8]'
+                `flex flex-col items-center justify-center gap-0.5 min-h-[44px] text-[10px] font-medium transition-colors ${
+                  isActive ? 'text-white font-semibold' : 'text-[#B3B3B3]'
                 }`
               }
             >
-              <Icon className="w-5 h-5" />
-              <span>{item.label}</span>
+              {({ isActive }) => (
+                <>
+                  <Icon
+                    className={`w-5 h-5 ${
+                      isActive ? 'text-[#1ED760]' : 'text-[#B3B3B3]'
+                    }`}
+                    strokeWidth={isActive ? 2.4 : 1.8}
+                  />
+                  <span>{item.label}</span>
+                </>
+              )}
             </NavLink>
           );
         })}

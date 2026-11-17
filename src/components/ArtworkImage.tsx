@@ -10,7 +10,7 @@ interface ArtworkImageProps {
 export const ArtworkImage: React.FC<ArtworkImageProps> = ({
   src,
   alt,
-  className = 'w-12 h-12 rounded-lg',
+  className = 'w-12 h-12 rounded-md',
 }) => {
   const [failed, setFailed] = useState(false);
   const needsEdgeTrim = Boolean(src?.includes('cover_nocturne_synth'));
@@ -18,7 +18,7 @@ export const ArtworkImage: React.FC<ArtworkImageProps> = ({
   if (!src || failed) {
     return (
       <div
-        className={`flex items-center justify-center bg-gradient-to-br from-[#1C1C26] to-[#121218] border border-[#262632] text-sky-400/70 shrink-0 ${className}`}
+        className={`flex items-center justify-center bg-[#282828] text-[#B3B3B3] shrink-0 ${className}`}
         aria-label={alt}
       >
         <Disc3 className="w-1/2 h-1/2" strokeWidth={1.5} />
@@ -27,7 +27,7 @@ export const ArtworkImage: React.FC<ArtworkImageProps> = ({
   }
 
   return (
-    <div className={`overflow-hidden bg-[#15151B] shrink-0 ${className}`}>
+    <div className={`overflow-hidden bg-[#282828] shrink-0 ${className}`}>
       <img
         src={src}
         alt={alt}

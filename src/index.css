@@ -3,21 +3,27 @@
 
 @layer base {
   :root {
-    --bg-canvas: #030305;
-    --bg-surface: #0a0a10;
-    --bg-elevated: #13131d;
-    --border-hairline: #1c1c2e;
-    --text-primary: #f8fafc;
-    --text-secondary: #94a3b8;
-    --accent-sky: #0ea5e9;
+    --bg-black: #000000;
+    --bg-canvas: #121212;
+    --bg-surface: #181818;
+    --bg-elevated: #242424;
+    --bg-highlight: #2a2a2a;
+    --border-hairline: rgba(255, 255, 255, 0.08);
+    --text-primary: #ffffff;
+    --text-secondary: #b3b3b3;
+    --text-muted: #727272;
+    --spotify-green: #1db954;
+    --spotify-green-bright: #1ed760;
   }
 
   html,
   body {
     background-color: var(--bg-canvas);
     color: var(--text-primary);
-    font-family: "DM Sans", -apple-system, BlinkMacSystemFont, sans-serif;
-    letter-spacing: 0.005em;
+    font-family: "DM Sans", -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+    letter-spacing: -0.005em;
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior-y: contain;
   }
 
   h1,
@@ -25,7 +31,8 @@
   h3,
   h4,
   .font-display {
-    font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+    letter-spacing: -0.025em;
   }
 
   .font-mono-tabular {
@@ -34,18 +41,42 @@
   }
 }
 
-/* Custom subtle scrollbars for black & sky-blue studio surfaces */
+/* Hide scrollbars on mobile horizontal carousels & chip rails */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Safe-area bottom padding helper for iOS notch/home indicator */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Spotify subtle dark scrollbars on desktop */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1e1e30;
+  background: rgba(255, 255, 255, 0.22);
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #0ea5e9;
+  background: rgba(255, 255, 255, 0.38);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

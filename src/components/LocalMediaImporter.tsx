@@ -64,10 +64,10 @@ export const LocalMediaImporter: React.FC<LocalMediaImporterProps> = ({
           setIsDragging(false);
           void handleFiles(e.dataTransfer.files);
         }}
-        className={`rounded-2xl border border-dashed p-6 transition-colors bg-[#0A0A10] ${
+        className={`rounded-2xl border border-dashed p-5 sm:p-6 transition-colors bg-[#181818] ${
           isDragging
-            ? 'border-sky-500 bg-sky-500/10'
-            : 'border-[#1C1C2E] hover:border-[#2C2C44]'
+            ? 'border-[#1ED760] bg-[#1ED760]/10'
+            : 'border-white/15 hover:border-white/30'
         }`}
       >
         <input
@@ -83,7 +83,7 @@ export const LocalMediaImporter: React.FC<LocalMediaImporterProps> = ({
 
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-start gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-sky-500/15 border border-sky-500/30 text-sky-400">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#1ED760]/15 text-[#1ED760]">
               {isImporting ? (
                 <Loader2 className="w-5 h-5 animate-spin" />
               ) : (
@@ -91,21 +91,21 @@ export const LocalMediaImporter: React.FC<LocalMediaImporterProps> = ({
               )}
             </div>
             <div className="min-w-0">
-              <p className="text-sm font-semibold text-[#F8FAFC]">
+              <p className="text-sm font-bold text-white">
                 Import Audio or Video Files from Device
               </p>
-              <p className="mt-1 text-xs text-[#94A3B8]">
-                Drag and drop or select MP3, M4A, WAV, FLAC, OGG, MP4, WebM, or
-                MOV files. Saved privately in your browser for offline playback.
+              <p className="mt-1 text-xs text-[#B3B3B3]">
+                Select MP3, M4A, WAV, FLAC, OGG, MP4, WebM, or MOV files. Saved
+                privately on this device for offline playback.
               </p>
-              <div className="mt-2.5 flex flex-wrap items-center gap-3.5 text-[11px] text-[#94A3B8]">
+              <div className="mt-2.5 flex flex-wrap items-center gap-3.5 text-[11px] text-[#B3B3B3]">
                 <span className="inline-flex items-center gap-1.5">
-                  <FileAudio className="w-3.5 h-3.5 text-sky-400" />
-                  Audio plays in Global Player & playlists
+                  <FileAudio className="w-3.5 h-3.5 text-[#1ED760]" />
+                  Audio plays in Global Player
                 </span>
                 <span className="inline-flex items-center gap-1.5">
-                  <FileVideo className="w-3.5 h-3.5 text-sky-400" />
-                  Video plays in the Offline Video Stage
+                  <FileVideo className="w-3.5 h-3.5 text-[#1ED760]" />
+                  Video plays in Offline Stage
                 </span>
               </div>
             </div>
@@ -115,7 +115,7 @@ export const LocalMediaImporter: React.FC<LocalMediaImporterProps> = ({
             type="button"
             disabled={isImporting}
             onClick={() => inputRef.current?.click()}
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-sky-500 px-5 py-3 text-xs font-medium text-white hover:bg-sky-400 disabled:opacity-60 transition-colors whitespace-nowrap shrink-0 min-h-[44px] shadow-md shadow-sky-500/25"
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-[#1ED760] px-6 py-3 text-xs font-bold text-black hover:bg-[#1FDF64] active:scale-[0.97] disabled:opacity-60 transition-all whitespace-nowrap shrink-0 min-h-[44px]"
           >
             <FolderUp className="w-4 h-4" />
             <span>{isImporting ? 'Importing...' : 'Choose Files'}</span>
@@ -126,9 +126,9 @@ export const LocalMediaImporter: React.FC<LocalMediaImporterProps> = ({
       {statusMessage && (
         <div
           role="status"
-          className="flex items-center gap-2.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-xs text-emerald-300"
+          className="flex items-center gap-2.5 rounded-xl bg-[#1ED760]/15 border border-[#1ED760]/30 px-4 py-3 text-xs text-[#1ED760] font-medium"
         >
-          <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+          <CheckCircle2 className="w-4 h-4 shrink-0" />
           <span>{statusMessage}</span>
         </div>
       )}

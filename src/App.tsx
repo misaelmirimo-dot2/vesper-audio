@@ -55,8 +55,8 @@ const queryClient = new QueryClient({
 
 const RouteFallback = () => (
   <div className="space-y-4">
-    <div className="h-8 w-48 rounded-lg bg-[#15151B] animate-pulse" />
-    <div className="h-48 rounded-2xl bg-[#15151B] animate-pulse" />
+    <div className="h-8 w-48 rounded-lg bg-[#181818] animate-pulse" />
+    <div className="h-48 rounded-2xl bg-[#181818] animate-pulse" />
   </div>
 );
 

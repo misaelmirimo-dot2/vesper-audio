@@ -56,21 +56,22 @@ export const AddToYouTubePlaylistModal: React.FC<
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-4"
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/75 backdrop-blur-sm p-0 sm:p-4"
       role="dialog"
       aria-modal="true"
       aria-labelledby="add-to-yt-playlist-title"
     >
-      <div className="w-full max-w-md rounded-2xl border border-[#1C1C2E] bg-[#0A0A10] p-6 shadow-2xl">
+      <div className="w-full sm:max-w-md rounded-t-3xl sm:rounded-2xl bg-[#242424] border border-white/10 p-6 shadow-2xl pb-safe">
+        <div className="w-10 h-1 bg-white/25 rounded-full mx-auto mb-4 sm:hidden" />
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
             <h3
               id="add-to-yt-playlist-title"
-              className="text-base font-semibold text-[#F8FAFC]"
+              className="text-base font-bold text-white"
             >
               Add to YouTube Playlist
             </h3>
-            <p className="mt-1 text-xs text-[#94A3B8] truncate max-w-xs">
+            <p className="mt-1 text-xs text-[#B3B3B3] truncate max-w-xs">
               {video.title} · {video.channelTitle}
             </p>
           </div>
@@ -78,15 +79,15 @@ export const AddToYouTubePlaylistModal: React.FC<
             type="button"
             onClick={onClose}
             aria-label="Close add to YouTube playlist modal"
-            className="p-2 text-[#94A3B8] hover:text-white rounded-lg shrink-0"
+            className="min-w-[44px] min-h-[44px] flex items-center justify-center text-[#B3B3B3] hover:text-white rounded-full shrink-0"
           >
-            <X className="w-4 h-4" />
+            <X className="w-5 h-5" />
           </button>
         </div>
 
-        <div className="mt-5 max-h-56 space-y-2 overflow-y-auto pr-1">
+        <div className="mt-4 max-h-56 space-y-2 overflow-y-auto pr-1">
           {youtubePlaylists.length === 0 ? (
-            <p className="py-6 text-center text-xs text-[#94A3B8]">
+            <p className="py-6 text-center text-xs text-[#B3B3B3]">
               No YouTube playlists yet. Create your first playlist below.
             </p>
           ) : (
@@ -100,20 +101,20 @@ export const AddToYouTubePlaylistModal: React.FC<
                   type="button"
                   disabled={alreadyIn}
                   onClick={() => void handleAdd(pl.id)}
-                  className="flex w-full items-center justify-between rounded-xl border border-[#1C1C2E] bg-[#13131D] px-4 py-3 text-left text-sm transition-colors hover:border-sky-500/40 disabled:opacity-70"
+                  className="flex w-full items-center justify-between rounded-xl bg-[#181818] px-4 py-3 text-left text-sm transition-colors hover:bg-[#2E2E2E] disabled:opacity-70 min-h-[48px]"
                 >
-                  <span className="truncate font-medium text-[#F8FAFC]">
+                  <span className="truncate font-semibold text-white">
                     {pl.name}
                   </span>
-                  <span className="flex items-center gap-1.5 text-xs text-[#94A3B8] shrink-0">
+                  <span className="flex items-center gap-1.5 text-xs text-[#B3B3B3] shrink-0">
                     {alreadyIn ? (
                       <>
-                        <Check className="w-3.5 h-3.5 text-sky-400" />
-                        Added
+                        <Check className="w-4 h-4 text-[#1ED760]" />
+                        <span className="text-[#1ED760] font-semibold">Added</span>
                       </>
                     ) : (
                       <>
-                        <ListPlus className="w-3.5 h-3.5" />
+                        <ListPlus className="w-4 h-4" />
                         {pl.videos.length}{' '}
                         {pl.videos.length === 1 ? 'video' : 'videos'}
                       </>
@@ -127,11 +128,11 @@ export const AddToYouTubePlaylistModal: React.FC<
 
         <form
           onSubmit={handleSubmit(onCreateAndAdd)}
-          className="mt-5 border-t border-[#1C1C2E] pt-4"
+          className="mt-5 border-t border-white/10 pt-4"
         >
           <label
             htmlFor="new-yt-playlist-inline"
-            className="block text-xs font-medium text-[#94A3B8]"
+            className="block text-xs font-semibold text-[#B3B3B3]"
           >
             Create new YouTube playlist
           </label>
@@ -141,12 +142,12 @@ export const AddToYouTubePlaylistModal: React.FC<
               type="text"
               placeholder="e.g. Congolese Rumba Classics"
               {...register('name')}
-              className="flex-1 rounded-xl border border-[#1C1C2E] bg-[#030305] px-3.5 py-2.5 text-sm text-[#F8FAFC] placeholder:text-[#64748B] focus:border-sky-500 focus:outline-none"
+              className="flex-1 rounded-lg bg-[#121212] border border-white/15 px-3.5 py-2.5 text-sm text-white placeholder:text-[#727272] focus:border-[#1ED760] focus:outline-none min-h-[44px]"
             />
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex items-center gap-1.5 rounded-xl bg-sky-500 px-4 py-2.5 text-xs font-medium text-white hover:bg-sky-400 transition-colors whitespace-nowrap shrink-0 shadow-md shadow-sky-500/20"
+              className="flex items-center gap-1.5 rounded-full bg-[#1ED760] px-5 py-2.5 text-xs font-bold text-black hover:bg-[#1FDF64] transition-colors whitespace-nowrap shrink-0 min-h-[44px]"
             >
               <Plus className="w-3.5 h-3.5" />
               Create
