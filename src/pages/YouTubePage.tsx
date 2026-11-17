@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -38,16 +38,9 @@ import {
   copyTextToClipboard,
   getCanonicalYouTubeUrl,
 } from '../utils/youtubeShare.ts';
+import { YOUTUBE_SUGGESTED_QUERIES } from '../utils/youtubeSuggestions.ts';
 
-const SUGGESTED_YT_QUERIES = [
-  'congolese rumba',
-  'ndombolo',
-  'soukous',
-  'afrobeat',
-  'lofi',
-  'ambient',
-  'jazz',
-];
+const SUGGESTED_YT_QUERIES = YOUTUBE_SUGGESTED_QUERIES;
 
 const FILTER_TABS: Array<{ id: 'all' | 'music' | 'live'; label: string }> = [
   { id: 'all', label: 'All Videos' },
@@ -66,9 +59,18 @@ const createYtPlaylistSchema = z.object({
 type CreateYtPlaylistValues = z.infer<typeof createYtPlaylistSchema>;
 
 export const YouTubePage: React.FC = () => {
+  const location = useLocation();
+  const navState = (location.state as {
+    initialVideo?: YouTubeSearchResult;
+    initialQueue?: YouTubeSearchResult[];
+    initialMode?: 'video' | 'music';
+  } | null) ?? null;
+
   const [searchParams, setSearchParams] = useSearchParams();
   const initialQ = searchParams.get('q') || '';
   const initialSection = searchParams.get('tab');
+  const playParam = searchParams.get('play') || '';
+  const modeParam = searchParams.get('mode') === 'music' ? 'music' : 'video';
 
   const [sectionTab, setSectionTab] = useState<'search' | 'favorites' | 'playlists'>(
     initialSection === 'favorites' || initialSection === 'playlists'
@@ -78,9 +80,15 @@ export const YouTubePage: React.FC = () => {
   const [inputValue, setInputValue] = useState(initialQ);
   const [submittedQuery, setSubmittedQuery] = useState(initialQ);
   const [filter, setFilter] = useState<'all' | 'music' | 'live'>('all');
-  const [activeVideo, setActiveVideo] = useState<YouTubeSearchResult | null>(null);
-  const [activeQueue, setActiveQueue] = useState<YouTubeSearchResult[]>([]);
-  const [playerMode, setPlayerMode] = useState<'video' | 'music'>('video');
+  const [activeVideo, setActiveVideo] = useState<YouTubeSearchResult | null>(
+    navState?.initialVideo ?? null
+  );
+  const [activeQueue, setActiveQueue] = useState<YouTubeSearchResult[]>(
+    navState?.initialQueue ?? []
+  );
+  const [playerMode, setPlayerMode] = useState<'video' | 'music'>(
+    navState?.initialMode ?? modeParam
+  );
   const [playlistModalVideo, setPlaylistModalVideo] =
     useState<YouTubeSearchResult | null>(null);
   const [selectedPlaylistId, setSelectedPlaylistId] = useState<string | null>(null);
@@ -172,6 +180,42 @@ export const YouTubePage: React.FC = () => {
     enabled: isOnline,
     staleTime: 60_000,
   });
+
+  useEffect(() => {
+    if (navState?.initialVideo) {
+      pauseJamendoPlayback();
+      setActiveVideo(navState.initialVideo);
+      if (navState.initialQueue?.length) {
+        setActiveQueue(navState.initialQueue);
+      }
+      if (navState.initialMode) {
+        setPlayerMode(navState.initialMode);
+      }
+      return;
+    }
+
+    if (playParam && (!activeVideo || activeVideo.videoId !== playParam)) {
+      const matched =
+        data?.results.find((v) => v.videoId === playParam) ||
+        youtubeFavorites.find((v) => v.videoId === playParam);
+      if (matched) {
+        pauseJamendoPlayback();
+        setActiveVideo(matched);
+        setPlayerMode(modeParam);
+        if (data?.results.length) {
+          setActiveQueue(data.results);
+        }
+      }
+    }
+  }, [
+    playParam,
+    modeParam,
+    navState,
+    data?.results,
+    youtubeFavorites,
+    activeVideo,
+    pauseJamendoPlayback,
+  ]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -353,10 +397,10 @@ export const YouTubePage: React.FC = () => {
           </p>
         </div>
         <Link
-          to="/search"
+          to="/downloads"
           className="text-xs font-bold text-[#1ED760] hover:underline whitespace-nowrap self-start sm:self-auto"
         >
-          Switch to Jamendo Catalog →
+          Open Offline Downloads →
         </Link>
       </div>
 

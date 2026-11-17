@@ -254,8 +254,8 @@ export const LibraryPage: React.FC = () => {
         <section className="rounded-xl bg-[#181818]/60 p-1 sm:p-2">
           {completedDownloads.length === 0 ? (
             <div className="p-10 text-center text-sm text-[#B3B3B3]">
-              No tracks downloaded offline. Visit Discover or Search to download
-              authorized tracks.
+              No tracks downloaded offline yet. Link your Downloads folder or
+              import downloaded files in Offline Downloads.
             </div>
           ) : (
             completedDownloads.map((d, idx) => (

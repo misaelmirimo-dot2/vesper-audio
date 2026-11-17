@@ -53,7 +53,16 @@ export default defineConfig(() => {
               purpose: 'maskable',
             },
           ],
-        },
+          file_handlers: [
+            {
+              action: '/downloads',
+              accept: {
+                'audio/*': ['.mp3', '.m4a', '.wav', '.ogg', '.flac', '.aac', '.opus'],
+                'video/*': ['.mp4', '.m4v', '.webm', '.mov', '.mkv'],
+              },
+            },
+          ],
+        } as Record<string, unknown>,
         workbox: {
           globPatterns: ['**/*.{js,css,html,ico,png,svg,jpg,woff,woff2}'],
           navigateFallbackDenylist: [/^\/api\//],

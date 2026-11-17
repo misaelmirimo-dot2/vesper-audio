@@ -28,6 +28,14 @@ import { apiFetch, type YouTubeSearchResult } from '../lib/api.ts';
 import { useAuth } from './AuthContext.tsx';
 import { reorderList } from '../utils/playerLogic.ts';
 import type { LocalMediaRecord } from '../utils/localMedia.ts';
+import {
+  getLinkedFolderStatus,
+  isDirectoryPickerSupported,
+  linkDownloadsDirectory,
+  syncLinkedDownloadsDirectory,
+  unlinkDownloadsDirectory,
+  type LinkedFolderStatus,
+} from '../lib/linkedFolderSync.ts';
 
 interface LibraryContextValue {
   favorites: NormalizedTrack[];
@@ -87,6 +95,12 @@ interface LibraryContextValue {
   setCommercialUseMode: (enabled: boolean) => Promise<void>;
   setSimulatedOffline: (enabled: boolean) => Promise<void>;
   refreshStorageStats: () => Promise<void>;
+  linkedFolderStatus: LinkedFolderStatus;
+  isSyncingFolder: boolean;
+  folderSyncNotice: string | null;
+  linkDownloadsFolder: () => Promise<void>;
+  unlinkDownloadsFolder: () => Promise<void>;
+  syncLinkedFolder: (interactive?: boolean) => Promise<number>;
 }
 
 const LibraryContext = createContext<LibraryContextValue | null>(null);
@@ -111,10 +125,25 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({
     quotaBytes: 0,
     persisted: false,
   });
+  const [linkedFolderStatus, setLinkedFolderStatus] = useState<LinkedFolderStatus>(() => ({
+    supported: isDirectoryPickerSupported(),
+    linked: false,
+    folderName: null,
+    permissionState: isDirectoryPickerSupported() ? 'prompt' : 'unsupported',
+    lastSyncedAt: null,
+    lastImportedCount: 0,
+  }));
+  const [isSyncingFolder, setIsSyncingFolder] = useState(false);
+  const [folderSyncNotice, setFolderSyncNotice] = useState<string | null>(null);
 
   const refreshStorageStats = useCallback(async () => {
     const est = await getStorageEstimate();
     setStorageInfo(est);
+  }, []);
+
+  const refreshLinkedFolderStatus = useCallback(async () => {
+    const status = await getLinkedFolderStatus();
+    setLinkedFolderStatus(status);
   }, []);
 
   const loadLocalState = useCallback(async () => {
@@ -155,8 +184,8 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({
     setRecentSearches(searches.map((s) => s.query));
     setCommercialUseModeState(commPref?.value === 'true');
     setSimulatedOfflineState(offPref?.value === 'true');
-    await refreshStorageStats();
-  }, [refreshStorageStats]);
+    await Promise.all([refreshStorageStats(), refreshLinkedFolderStatus()]);
+  }, [refreshStorageStats, refreshLinkedFolderStatus]);
 
   // Initial load from IndexedDB (works offline immediately)
   useEffect(() => {
@@ -461,6 +490,107 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({
     setLocalMedia((prev) => prev.filter((item) => item.id !== id));
     await refreshStorageStats();
   };
+
+  const syncLinkedFolder = useCallback(
+    async (interactive = false): Promise<number> => {
+      setIsSyncingFolder(true);
+      try {
+        const currentLocals = await offlineDb.localMedia.toArray();
+        const result = await syncLinkedDownloadsDirectory(
+          currentLocals,
+          interactive
+        );
+        if (result.imported.length > 0) {
+          const updatedLocals = await offlineDb.localMedia
+            .orderBy('addedAt')
+            .reverse()
+            .toArray();
+          setLocalMedia(updatedLocals);
+          await refreshStorageStats();
+          setFolderSyncNotice(
+            `Auto-imported ${result.imported.length} new ${
+              result.imported.length === 1 ? 'download' : 'downloads'
+            } from ${result.folderName || 'Downloads'}.`
+          );
+        }
+        await refreshLinkedFolderStatus();
+        return result.imported.length;
+      } finally {
+        setIsSyncingFolder(false);
+      }
+    },
+    [refreshLinkedFolderStatus, refreshStorageStats]
+  );
+
+  const linkDownloadsFolder = async () => {
+    const rec = await linkDownloadsDirectory();
+    await refreshLinkedFolderStatus();
+    if (rec) {
+      await syncLinkedFolder(true);
+    }
+  };
+
+  const unlinkDownloadsFolder = async () => {
+    await unlinkDownloadsDirectory();
+    setFolderSyncNotice(null);
+    await refreshLinkedFolderStatus();
+  };
+
+  // Auto-sync linked Downloads folder whenever user returns to Vesper Audio
+  useEffect(() => {
+    if (!linkedFolderStatus.linked) return;
+
+    const handleReturn = () => {
+      if (document.visibilityState === 'visible') {
+        void syncLinkedFolder(false);
+      }
+    };
+
+    window.addEventListener('focus', handleReturn);
+    document.addEventListener('visibilitychange', handleReturn);
+    return () => {
+      window.removeEventListener('focus', handleReturn);
+      document.removeEventListener('visibilitychange', handleReturn);
+    };
+  }, [linkedFolderStatus.linked, syncLinkedFolder]);
+
+  // PWA File Handling API: auto-import audio/video files opened with Vesper Audio
+  useEffect(() => {
+    const lq = (
+      window as unknown as {
+        launchQueue?: {
+          setConsumer: (
+            cb: (params: {
+              files?: Array<{ getFile: () => Promise<File> }>;
+            }) => void | Promise<void>
+          ) => void;
+        };
+      }
+    ).launchQueue;
+    if (!lq || typeof lq.setConsumer !== 'function') return;
+
+    lq.setConsumer(async (launchParams) => {
+      if (!launchParams.files || launchParams.files.length === 0) return;
+      const files: File[] = [];
+      for (const handle of launchParams.files) {
+        try {
+          files.push(await handle.getFile());
+        } catch {
+          // Ignore unreadable handle
+        }
+      }
+      if (files.length > 0) {
+        const { imported } = await importLocalFiles(files);
+        if (imported.length > 0) {
+          setFolderSyncNotice(
+            `Imported ${imported.length} downloaded ${
+              imported.length === 1 ? 'file' : 'files'
+            } directly into Offline Downloads.`
+          );
+        }
+      }
+    });
+  }, []);
 
   const toggleSaveCollection = async (item: {
     collectionType: 'album' | 'artist';
@@ -786,6 +916,12 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({
         setCommercialUseMode,
         setSimulatedOffline,
         refreshStorageStats,
+        linkedFolderStatus,
+        isSyncingFolder,
+        folderSyncNotice,
+        linkDownloadsFolder,
+        unlinkDownloadsFolder,
+        syncLinkedFolder,
       }}
     >
       {children}

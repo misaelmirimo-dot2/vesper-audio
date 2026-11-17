@@ -33,15 +33,36 @@ const VIDEO_EXTENSIONS = new Set([
   'mkv',
 ]);
 
+const INCOMPLETE_DOWNLOAD_EXTENSIONS = new Set([
+  'crdownload',
+  'part',
+  'partial',
+  'tmp',
+  'download',
+]);
+
 export function getFileExtension(fileName: string): string {
   const parts = fileName.trim().toLowerCase().split('.');
   return parts.length > 1 ? parts[parts.length - 1] : '';
+}
+
+export function isIncompleteBrowserDownload(fileName: string): boolean {
+  const ext = getFileExtension(fileName);
+  return INCOMPLETE_DOWNLOAD_EXTENSIONS.has(ext);
+}
+
+export function buildLocalMediaDedupeKey(
+  fileName: string,
+  fileSizeBytes: number
+): string {
+  return `${fileName.trim().toLowerCase()}::${fileSizeBytes}`;
 }
 
 export function detectLocalMediaType(
   fileName: string,
   mimeType?: string
 ): 'audio' | 'video' | null {
+  if (isIncompleteBrowserDownload(fileName)) return null;
   const mime = (mimeType || '').toLowerCase();
   const ext = getFileExtension(fileName);
 

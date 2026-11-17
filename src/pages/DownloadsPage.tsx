@@ -3,7 +3,10 @@ import {
   CheckCircle2,
   FileAudio,
   FileVideo,
+  FolderCheck,
+  FolderSync,
   HardDrive,
+  Link2Off,
   ListPlus,
   Play,
   RefreshCw,
@@ -35,6 +38,12 @@ export const DownloadsPage: React.FC = () => {
     removeLocalMedia,
     startDownload,
     recordPlay,
+    linkedFolderStatus,
+    isSyncingFolder,
+    folderSyncNotice,
+    linkDownloadsFolder,
+    unlinkDownloadsFolder,
+    syncLinkedFolder,
   } = useLibrary();
   const { playTrack, pausePlayback, isPlaying } = usePlayerStore();
 
@@ -42,8 +51,29 @@ export const DownloadsPage: React.FC = () => {
   const [activeVideo, setActiveVideo] = useState<LocalMediaRecord | null>(null);
   const [videoObjectUrl, setVideoObjectUrl] = useState<string | null>(null);
   const [videoError, setVideoError] = useState<string | null>(null);
+  const [folderError, setFolderError] = useState<string | null>(null);
   const [modalTrack, setModalTrack] = useState<NormalizedTrack | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+
+  useEffect(() => {
+    if (
+      !linkedFolderStatus.linked ||
+      linkedFolderStatus.permissionState !== 'granted'
+    ) {
+      return;
+    }
+    void syncLinkedFolder(false);
+    const interval = window.setInterval(() => {
+      if (document.visibilityState === 'visible') {
+        void syncLinkedFolder(false);
+      }
+    }, 4000);
+    return () => window.clearInterval(interval);
+  }, [
+    linkedFolderStatus.linked,
+    linkedFolderStatus.permissionState,
+    syncLinkedFolder,
+  ]);
 
   const completed = downloads.filter((d) => d.status === 'completed');
   const active = downloads.filter((d) => d.status === 'downloading');
@@ -155,7 +185,7 @@ export const DownloadsPage: React.FC = () => {
               </p>
             </div>
           </div>
-          <div className="text-right font-mono-tabular">
+          <div className="text-left sm:text-right font-mono-tabular">
             <p className="text-sm font-bold text-white">
               {formatBytes(totalAudioBytes + totalLocalBytes)} media stored
             </p>
@@ -222,6 +252,123 @@ export const DownloadsPage: React.FC = () => {
               </button>
             ))}
           </div>
+        </div>
+
+        {/* Linked Downloads Folder Auto-Sync Card */}
+        <div className="rounded-2xl bg-[#181818] border border-white/10 p-4 sm:p-5 space-y-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-start gap-3.5">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#1ED760]/15 text-[#1ED760]">
+                {linkedFolderStatus.linked ? (
+                  <FolderCheck className="w-5 h-5" />
+                ) : (
+                  <FolderSync className="w-5 h-5" />
+                )}
+              </div>
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-center gap-2">
+                  <p className="text-sm font-bold text-white">
+                    {linkedFolderStatus.linked
+                      ? `Linked Folder: ${linkedFolderStatus.folderName}`
+                      : 'Auto-Sync Downloads Folder'}
+                  </p>
+                  {linkedFolderStatus.linked &&
+                    linkedFolderStatus.permissionState === 'granted' && (
+                      <span className="rounded-full bg-[#1ED760]/15 px-2.5 py-0.5 text-[11px] font-semibold text-[#1ED760]">
+                        Auto-syncing
+                      </span>
+                    )}
+                </div>
+                <p className="mt-1 text-xs text-[#B3B3B3]">
+                  {linkedFolderStatus.linked
+                    ? linkedFolderStatus.permissionState === 'granted'
+                      ? 'Finished MP3/MP4 downloads in this folder automatically appear below whenever you switch back from y2mate.'
+                      : 'Permission is paused for this session. Tap Sync Now to resume automatic detection.'
+                    : linkedFolderStatus.supported
+                    ? 'Link your browser Downloads folder once so finished downloads from y2mate automatically appear here.'
+                    : 'Your mobile browser restricts background folder watching. Save downloads to Files / Downloads and tap Choose Files below to add them immediately.'}
+                </p>
+              </div>
+            </div>
+
+            {linkedFolderStatus.supported && (
+              <div className="flex flex-wrap items-center gap-2 shrink-0">
+                {linkedFolderStatus.linked ? (
+                  <>
+                    <button
+                      type="button"
+                      disabled={isSyncingFolder}
+                      onClick={() => {
+                        setFolderError(null);
+                        void syncLinkedFolder(true).catch((err) => {
+                          setFolderError(
+                            err instanceof Error
+                              ? err.message
+                              : 'Unable to scan linked folder.'
+                          );
+                        });
+                      }}
+                      className="inline-flex items-center gap-1.5 rounded-full bg-[#1ED760] px-4 py-2.5 text-xs font-bold text-black hover:bg-[#1FDF64] disabled:opacity-60 transition-colors whitespace-nowrap min-h-[40px]"
+                    >
+                      <RefreshCw
+                        className={`w-3.5 h-3.5 ${
+                          isSyncingFolder ? 'animate-spin' : ''
+                        }`}
+                      />
+                      <span>{isSyncingFolder ? 'Syncing...' : 'Sync Now'}</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setFolderError(null);
+                        void unlinkDownloadsFolder();
+                      }}
+                      aria-label="Unlink Downloads folder"
+                      className="inline-flex items-center gap-1.5 rounded-full bg-[#242424] px-3.5 py-2.5 text-xs font-semibold text-[#B3B3B3] hover:text-white hover:bg-[#303030] transition-colors whitespace-nowrap min-h-[40px]"
+                    >
+                      <Link2Off className="w-3.5 h-3.5" />
+                      <span>Unlink</span>
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFolderError(null);
+                      void linkDownloadsFolder().catch((err) => {
+                        setFolderError(
+                          err instanceof Error
+                            ? err.message
+                            : 'Unable to link Downloads folder.'
+                        );
+                      });
+                    }}
+                    className="inline-flex items-center gap-2 rounded-full bg-[#1ED760] px-5 py-2.5 text-xs font-bold text-black hover:bg-[#1FDF64] active:scale-[0.97] transition-all whitespace-nowrap min-h-[44px]"
+                  >
+                    <FolderSync className="w-4 h-4" />
+                    <span>Link Downloads Folder</span>
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+
+          {folderSyncNotice && (
+            <p
+              role="status"
+              className="rounded-xl bg-[#1ED760]/15 border border-[#1ED760]/30 px-3.5 py-2 text-xs font-medium text-[#1ED760]"
+            >
+              {folderSyncNotice}
+            </p>
+          )}
+          {folderError && (
+            <p
+              role="alert"
+              className="rounded-xl bg-rose-500/10 border border-rose-500/30 px-3.5 py-2 text-xs text-rose-300"
+            >
+              {folderError}
+            </p>
+          )}
         </div>
 
         <LocalMediaImporter />
@@ -447,8 +594,7 @@ export const DownloadsPage: React.FC = () => {
               No offline tracks cached yet
             </p>
             <p className="text-xs text-[#B3B3B3] max-w-md mx-auto">
-              Tracks with artist permission and a compatible Creative Commons
-              licence can be downloaded from Discover or Search.
+              Tracks cached inside Vesper Audio appear here for offline playback alongside your linked Downloads locker above.
             </p>
           </div>
         ) : (

@@ -238,19 +238,25 @@ export function filterCuratedYouTube(
   query: string,
   filter: 'all' | 'music' | 'live'
 ): YouTubeSearchResult[] {
-  const q = query.trim().toLowerCase();
-  return CURATED_YOUTUBE_CATALOG.filter((item) => {
+  const byCategory = CURATED_YOUTUBE_CATALOG.filter((item) => {
     if (filter === 'live' && item.category !== 'live') return false;
     if (filter === 'music' && item.category !== 'music' && item.category !== 'live') {
       return false;
     }
-    if (!q) return true;
-    return (
-      item.title.toLowerCase().includes(q) ||
-      item.channelTitle.toLowerCase().includes(q) ||
-      item.description.toLowerCase().includes(q)
-    );
+    return true;
   });
+
+  const q = query.trim().toLowerCase();
+  if (!q) return byCategory;
+
+  const tokens = q.split(/\s+/).filter((t) => t.length >= 2);
+  const matched = byCategory.filter((item) => {
+    const haystack =
+      `${item.title} ${item.channelTitle} ${item.description}`.toLowerCase();
+    return haystack.includes(q) || tokens.some((tok) => haystack.includes(tok));
+  });
+
+  return matched.length > 0 ? matched : byCategory;
 }
 
 async function queryOfficialYouTubeApi(

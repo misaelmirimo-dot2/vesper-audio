@@ -108,7 +108,7 @@ export const PlaylistsPage: React.FC = () => {
             No playlists created yet
           </p>
           <p className="text-xs text-[#B3B3B3]">
-            Create a playlist above, then add songs from Discover or Search.
+            Create a playlist above, then add downloaded audio or YouTube favorites.
           </p>
         </div>
       ) : (

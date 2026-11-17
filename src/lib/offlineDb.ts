@@ -62,6 +62,15 @@ export interface YouTubePlaylistItem {
   syncedToCloud: boolean;
 }
 
+export interface LinkedFolderRecord {
+  id: string;
+  name: string;
+  handle: unknown;
+  linkedAt: string;
+  lastSyncedAt: string;
+  lastImportedCount: number;
+}
+
 class VesperOfflineDatabase extends Dexie {
   favorites!: Table<FavoriteRecord, string>;
   playlists!: Table<PlaylistItem, string>;
@@ -74,6 +83,7 @@ class VesperOfflineDatabase extends Dexie {
   localMediaBlobs!: Table<LocalMediaBlobRecord, string>;
   youtubeFavorites!: Table<YouTubeFavoriteRecord, string>;
   youtubePlaylists!: Table<YouTubePlaylistItem, string>;
+  linkedFolders!: Table<LinkedFolderRecord, string>;
 
   constructor() {
     super('vesper-offline-db');
@@ -98,6 +108,20 @@ class VesperOfflineDatabase extends Dexie {
       localMediaBlobs: 'id',
       youtubeFavorites: 'videoId, addedAt',
       youtubePlaylists: 'id, updatedAt',
+    });
+    this.version(3).stores({
+      favorites: 'trackId, addedAt',
+      playlists: 'id, updatedAt',
+      history: '++id, trackId, playedAt',
+      savedCollections: 'key, collectionType, providerId',
+      downloads: 'trackId, status, downloadedAt',
+      preferences: 'key',
+      recentSearches: 'query, searchedAt',
+      localMedia: 'id, mediaType, addedAt',
+      localMediaBlobs: 'id',
+      youtubeFavorites: 'videoId, addedAt',
+      youtubePlaylists: 'id, updatedAt',
+      linkedFolders: 'id',
     });
   }
 }

@@ -1,8 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
+  buildLocalMediaDedupeKey,
   detectLocalMediaType,
   inferMimeType,
+  isIncompleteBrowserDownload,
   localMediaToNormalizedTrack,
   normalizeDownloadContentType,
   parseMediaMetadataFromFilename,
@@ -14,6 +16,26 @@ test('detectLocalMediaType classifies audio and video files by mime and extensio
   assert.equal(detectLocalMediaType('voice-note.m4a', ''), 'audio');
   assert.equal(detectLocalMediaType('clip.webm', 'video/webm'), 'video');
   assert.equal(detectLocalMediaType('document.pdf', 'application/pdf'), null);
+  assert.equal(detectLocalMediaType('song.mp3.crdownload', ''), null);
+  assert.equal(detectLocalMediaType('video.mp4.part', ''), null);
+});
+
+test('isIncompleteBrowserDownload detects temporary browser download extensions', () => {
+  assert.equal(isIncompleteBrowserDownload('track.mp3.crdownload'), true);
+  assert.equal(isIncompleteBrowserDownload('clip.mp4.PART'), true);
+  assert.equal(isIncompleteBrowserDownload('unfinished.download'), true);
+  assert.equal(isIncompleteBrowserDownload('finished.mp3'), false);
+});
+
+test('buildLocalMediaDedupeKey normalizes filename case and file size', () => {
+  assert.equal(
+    buildLocalMediaDedupeKey('  Song Title.MP3 ', 4096),
+    buildLocalMediaDedupeKey('song title.mp3', 4096)
+  );
+  assert.notEqual(
+    buildLocalMediaDedupeKey('song.mp3', 4096),
+    buildLocalMediaDedupeKey('song.mp3', 4097)
+  );
 });
 
 test('inferMimeType fills missing browser mime types from extensions', () => {
