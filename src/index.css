@@ -50,9 +50,12 @@
   display: none;
 }
 
-/* Safe-area bottom padding helper for iOS notch/home indicator */
+/* Safe-area padding helpers for iOS notch/island & home indicator */
 .pb-safe {
   padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.pt-safe {
+  padding-top: env(safe-area-inset-top, 16px);
 }
 
 /* Spotify subtle dark scrollbars on desktop */

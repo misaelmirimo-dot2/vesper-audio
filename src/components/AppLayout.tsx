@@ -230,8 +230,8 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col md:pl-64 lg:pl-[272px] min-w-0 bg-[#121212]">
-        {/* Mobile Top Bar (Compact 48px Spotify iOS Header) */}
-        <header className="md:hidden flex h-12 items-center justify-between bg-[#121212]/90 backdrop-blur-xl px-4 sticky top-0 z-20">
+        {/* Mobile Top Bar (Spotify iOS Header with iPhone Notch Safe Area) */}
+        <header className="md:hidden flex min-h-[56px] pt-safe items-center justify-between bg-[#121212]/95 backdrop-blur-xl px-4 pb-2 sticky top-0 z-20">
           <Link
             to="/"
             className="font-display text-base font-extrabold tracking-tight text-white whitespace-nowrap shrink-0 flex items-center gap-2"
