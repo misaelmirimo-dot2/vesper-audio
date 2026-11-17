@@ -234,17 +234,18 @@ export const YouTubePage: React.FC = () => {
   const selectedPlaylist =
     youtubePlaylists.find((p) => p.id === selectedPlaylistId) || null;
 
-  const handleCopyForY2Mate = (video: YouTubeSearchResult) => {
+  const handleCopyVideoUrl = async (video: YouTubeSearchResult) => {
     const url = getCanonicalYouTubeUrl(video);
     if (!url) return;
-    void copyTextToClipboard(url);
+    const copied = await copyTextToClipboard(url);
+    if (!copied) return;
     setCopiedY2MateVideoId(video.videoId);
     if (copyTimerRef.current !== null) {
       window.clearTimeout(copyTimerRef.current);
     }
     copyTimerRef.current = window.setTimeout(() => {
       setCopiedY2MateVideoId(null);
-    }, 4000);
+    }, 5000);
   };
 
   const renderVideoCard = (
@@ -573,9 +574,9 @@ export const YouTubePage: React.FC = () => {
                   href={Y2MATE_TARGET_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  onClick={() => handleCopyForY2Mate(activeVideo)}
+                  onClick={() => void handleCopyVideoUrl(activeVideo)}
                   aria-label={`D: copy URL for ${activeVideo.title} and open y2mate`}
-                  title="Copy YouTube URL and open y2mate to paste"
+                  title="Copy YouTube video URL to clipboard and open y2mate"
                   className={`min-w-[40px] min-h-[40px] inline-flex items-center justify-center gap-1 rounded-full px-3.5 py-2 text-xs font-extrabold transition-colors whitespace-nowrap ${
                     copiedY2MateVideoId === activeVideo.videoId
                       ? 'bg-[#1ED760] text-black'
@@ -698,7 +699,7 @@ export const YouTubePage: React.FC = () => {
                 role="status"
                 className="font-semibold text-[#1ED760]"
               >
-                URL copied to clipboard — paste into y2mate
+                URL copied to clipboard — opening y2mate
               </span>
             ) : (
               <span>Official YouTube Player</span>

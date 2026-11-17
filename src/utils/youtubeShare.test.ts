@@ -2,6 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   Y2MATE_TARGET_URL,
+  copyTextSynchronously,
+  copyTextToClipboard,
   getCanonicalYouTubeUrl,
 } from './youtubeShare';
 
@@ -28,4 +30,10 @@ test('getCanonicalYouTubeUrl falls back to building watch URL from videoId', () 
 
 test('getCanonicalYouTubeUrl returns empty string when neither watchUrl nor videoId exists', () => {
   assert.equal(getCanonicalYouTubeUrl({}), '');
+});
+
+test('copyTextSynchronously and copyTextToClipboard return false cleanly for empty input or missing DOM', async () => {
+  assert.equal(copyTextSynchronously(''), false);
+  assert.equal(copyTextSynchronously('https://www.youtube.com/watch?v=abc'), false);
+  assert.equal(await copyTextToClipboard(''), false);
 });
